@@ -79,9 +79,9 @@ public class InvertedIndex implements Index{
                 //}
                 
                 if(mInvertedIndex.containsKey(term))
-                        {
-                           results = mInvertedIndex.get(term);  
-                        }
+                {
+                   results = mInvertedIndex.get(term);  
+                }
 		return results;
 	}
         

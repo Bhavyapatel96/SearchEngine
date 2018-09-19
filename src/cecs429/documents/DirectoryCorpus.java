@@ -152,4 +152,17 @@ public class DirectoryCorpus implements DocumentCorpus {
 		corpus.registerFileDocumentFactory(fileExtension, TextFileDocument::loadTextFileDocument);
 		return corpus;
 	}
+        
+        /**
+         * analagous function to loadTextDirectory for json files
+         * @param absolutPath gives path to current project directory 
+         * @param fileExtension json extension 
+         */
+        public static DirectoryCorpus loadJsonTextDirectory(Path absolutePath, String fileExtension) {
+		DirectoryCorpus corpus = new DirectoryCorpus(absolutePath);
+		corpus.registerFileDocumentFactory(fileExtension, JsonFileDocument::loadJsonFileDocument);
+		return corpus;
+	}
+        
+        
 }

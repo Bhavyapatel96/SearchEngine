@@ -14,7 +14,6 @@ import cecs429.text.BasicTokenProcessor;
 import cecs429.text.EnglishTokenStream;
 import java.io.Reader;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.Scanner;
 
 /**
@@ -25,21 +24,23 @@ public class DocumentIndexer {
     
     public static void main(String[] args) {
         
-        DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");
+        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json"); //prev. .txt
         InvertedIndex index = indexCorpus(corpus) ;
+        
+        
         // We aren't ready to use a full query parser; for now, we'll only support single-term queries.
-        String query = "whale"; // hard-coded search for "whale"
-       
-        for (Posting p : index.getPostings(query)) {
-                System.out.println("Document " + corpus.getDocument(p.getDocumentId()).getTitle());
-
-        }
+//        String query = "whale"; // hard-coded search for "whale"
+//       
+//        for (Posting p : index.getPostings(query)) {
+//                System.out.println("Document " + corpus.getDocument(p.getDocumentId()).getTitle());
+//
+//        }
         
          // TODO: fix this application so the user is asked for a term to search.
         boolean cont = true; 
 
         Scanner scan = new Scanner(System.in);
-
+        String query; 
 
         while(cont)
         {
@@ -61,17 +62,18 @@ public class DocumentIndexer {
                 System.out.println("Documents that contain the query: " + query); 
                for (Posting p : index.getPostings(query)) {
 
-                System.out.println("Document " + corpus.getDocument(p.getDocumentId()).getTitle());
+                System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());
                 } 
             }
 
         }
         
         //index.print(); //print out hashmap
-               
-                
-
-        
+//        Path path = Paths.get("/Users/dayanarios/NetBeansProjects/CECS529/NPSarticles/article001.json");
+//               
+//        JsonFileDocument doc = new JsonFileDocument(1, path); 
+//
+//        doc.getContent(); 
     }
     
     
