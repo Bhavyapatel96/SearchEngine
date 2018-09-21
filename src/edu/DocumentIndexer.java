@@ -10,10 +10,12 @@ import cecs429.documents.Document;
 import cecs429.documents.DocumentCorpus;
 import cecs429.index.InvertedIndex;
 import cecs429.index.Posting;
-import cecs429.text.BasicTokenProcessor;
 import cecs429.text.EnglishTokenStream;
+import cecs429.text.NewTokenProcessor;
 import java.io.Reader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,48 +24,47 @@ import java.util.Scanner;
  */
 public class DocumentIndexer {
     
-    public static void main(String[] args) {
-        
-        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json"); //prev. .txt
+   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+       
+        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json");
+        //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt"); //prev. .txt
         InvertedIndex index = indexCorpus(corpus) ;
-        
-        
-        // We aren't ready to use a full query parser; for now, we'll only support single-term queries.
-//        String query = "whale"; // hard-coded search for "whale"
-//       
-//        for (Posting p : index.getPostings(query)) {
-//                System.out.println("Document " + corpus.getDocument(p.getDocumentId()).getTitle());
-//
-//        }
+      
         
          // TODO: fix this application so the user is asked for a term to search.
         boolean cont = true; 
 
         Scanner scan = new Scanner(System.in);
         String query; 
+        List<String> queries; 
+        
+        NewTokenProcessor processor = new NewTokenProcessor();  
 
         while(cont)
         {
             System.out.println("\nEnter a term to search (single word only): ");
             query = scan.nextLine();
-            query = query.toLowerCase(); 
+            queries = new ArrayList(processor.processToken(query)); 
 
             if (query.equals("quit")){
                 cont = false;
                 break;
             }
 
-            if(index.getPostings(query).isEmpty())
+            for(String q : queries)
             {
-                System.out.println(query + " not found in vocabulary");
-            }
-            else
-            {
-                System.out.println("Documents that contain the query: " + query); 
-               for (Posting p : index.getPostings(query)) {
+                if(index.getPostings(q).isEmpty())
+                {
+                    System.out.println(q + " not found in vocabulary");
+                }
+                else
+                {
+                    System.out.println("Documents that contain the query: " + query); 
+                   for (Posting p : index.getPostings(q)) {
 
-                System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());
-                } 
+                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());
+                    } 
+                }
             }
 
         }
@@ -74,13 +75,19 @@ public class DocumentIndexer {
 //        JsonFileDocument doc = new JsonFileDocument(1, path); 
 //
 //        doc.getContent(); 
+
+     
+     //NewTokenProcessor processor = new NewTokenProcessor(); 
+     //processor.processToken(""); 
+     //System.out.println(processor.PorterStemmer("consolidating")); 
     }
     
     
-    private static InvertedIndex indexCorpus(DocumentCorpus corpus) {
+    private static InvertedIndex indexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         
         
-        BasicTokenProcessor processor = new BasicTokenProcessor();
+        //BasicTokenProcessor processor = new BasicTokenProcessor();
+        NewTokenProcessor processor = new NewTokenProcessor(); 
 
         // First, build the vocabulary hash set.
         // TODO:
@@ -103,13 +110,15 @@ public class DocumentIndexer {
             for(String t : tokens)
             {
 
-                String word = processor.processToken(t);
-                if (word.length() > 0) 
+                List<String> terms = new ArrayList(processor.processToken(t));   
+                //Collections.copy(terms,processor.processToken(t));  //copies the result of normalization into a new list
+                
+                for(String term: terms)
                 {
-             
-                    index.addTerm(word, d.getId()); 
-                    
+                    index.addTerm(term, d.getId()); 
                 }
+                
+                
 
             }
 

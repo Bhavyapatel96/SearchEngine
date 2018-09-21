@@ -3,8 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/dayanarios/Desktop/SETProj/src/edu/DocumentIndexer.java</file>
-            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/documents/JsonFileDocument.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/text/TokenProcessor.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/text/BasicTokenProcessor.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/text/NewTokenProcessor.java</file>
         </group>
     </open-files>
 </project-private>
