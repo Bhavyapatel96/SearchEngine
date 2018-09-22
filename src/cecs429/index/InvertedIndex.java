@@ -36,7 +36,7 @@ public class InvertedIndex implements Index{
          * given term
 	 */
 	public void addTerm(String term, int documentId) {  //assumes all keys are present
-		//int vIndex = Collections.binarySearch(mVocabulary, term);
+		
                 List<Posting> results = new ArrayList<>();  //will store results
                 
 		        

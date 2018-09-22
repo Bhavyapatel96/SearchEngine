@@ -8,12 +8,16 @@ package edu;
 import cecs429.documents.DirectoryCorpus;
 import cecs429.documents.Document;
 import cecs429.documents.DocumentCorpus;
+import cecs429.index.Index;
+import cecs429.index.Index2;
 import cecs429.index.InvertedIndex;
+import cecs429.index.Positional_inverted_index;
+import cecs429.index.Positional_posting;
 import cecs429.index.Posting;
 import cecs429.text.EnglishTokenStream;
 import cecs429.text.NewTokenProcessor;
 import java.io.Reader;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,13 +27,36 @@ import java.util.Scanner;
  * @author dayanarios
  */
 public class DocumentIndexer {
+    private static DocumentCorpus corpus;
+    //private static InvertedIndex index; 
+    private static Positional_inverted_index index;
+   
     
-   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    /**
+     * 
+     * @param path supplied by user in GUI.SearchDirectoriesButtonActionPerformed
+     * 
+     */
+    protected static void startIndexing(Path path) throws ClassNotFoundException, InstantiationException, IllegalAccessException
+   {
        
-        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json");
-        //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt"); //prev. .txt
-        InvertedIndex index = indexCorpus(corpus) ;
+       corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
+        //corpus = DirectoryCorpus.loadTextDirectory(path.toAbsolutePath(), ".txt"); //prev. .txt
+        index = posindexCorpus(corpus);
+        //index = indexCorpus(corpus); 
+        
+        
+        
+       //startSearchEngine(corpus, index);
+       startSearchEngine2(corpus, index); 
+        
       
+   }
+   
+   protected static void startSearchEngine(DocumentCorpus corpus, Index index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+   {
+       
+       
         
          // TODO: fix this application so the user is asked for a term to search.
         boolean cont = true; 
@@ -53,34 +80,74 @@ public class DocumentIndexer {
 
             for(String q : queries)
             {
-                if(index.getPostings(q).isEmpty())
+                if(index.getPostings(q).isEmpty())//(index.getPositional_posting(query).isEmpty())
                 {
                     System.out.println(q + " not found in vocabulary");
                 }
                 else
                 {
                     System.out.println("Documents that contain the query: " + query); 
-                   for (Posting p : index.getPostings(q)) {
+                   for (Posting p : index.getPostings(q)) { //(Positional_posting p : index.getPositional_posting(query)){
 
-                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());
+                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
                     } 
                 }
             }
 
         }
         
-        //index.print(); //print out hashmap
-//        Path path = Paths.get("/Users/dayanarios/NetBeansProjects/CECS529/NPSarticles/article001.json");
-//               
-//        JsonFileDocument doc = new JsonFileDocument(1, path); 
-//
-//        doc.getContent(); 
+        System.exit(0);
+   }
+   
+   
+   
+   protected static void startSearchEngine2(DocumentCorpus corpus, Index2 index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+   {
+       
+       
+        
+         // TODO: fix this application so the user is asked for a term to search.
+        boolean cont = true; 
 
-     
-     //NewTokenProcessor processor = new NewTokenProcessor(); 
-     //processor.processToken(""); 
-     //System.out.println(processor.PorterStemmer("consolidating")); 
-    }
+        Scanner scan = new Scanner(System.in);
+        String query; 
+        List<String> queries; 
+        
+        NewTokenProcessor processor = new NewTokenProcessor();  
+
+        while(cont)
+        {
+            System.out.println("\nEnter a term to search (single word only): ");
+            query = scan.nextLine();
+            queries = new ArrayList(processor.processToken(query)); 
+
+            if (query.equals("quit")){
+                cont = false;
+                break;
+            }
+
+            for(String q : queries)
+            {
+                if(index.getPositional_posting(query).isEmpty())
+                {
+                    System.out.println(q + " not found in vocabulary");
+                }
+                else
+                {
+                    System.out.println("Documents that contain the query: " + query); 
+                   for (Positional_posting p : index.getPositional_posting(query)){
+
+                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
+                    } 
+                }
+            }
+
+        }
+        
+        System.exit(0);
+   }
+   
+   
     
     
     private static InvertedIndex indexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -111,7 +178,7 @@ public class DocumentIndexer {
             {
 
                 List<String> terms = new ArrayList(processor.processToken(t));   
-                //Collections.copy(terms,processor.processToken(t));  //copies the result of normalization into a new list
+                
                 
                 for(String term: terms)
                 {
@@ -125,7 +192,53 @@ public class DocumentIndexer {
         }
         
  
+        
         return index; 
     }
+    
+    
+    private static Positional_inverted_index posindexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        
+        
+        //BasicTokenProcessor processor = new BasicTokenProcessor();
+        NewTokenProcessor processor = new NewTokenProcessor(); 
+        
+        Iterable<Document> docs = corpus.getDocuments(); 
+        
+        Positional_inverted_index index = new Positional_inverted_index(); 
+
+        // Iterate through the documents, and:
+        for(Document d : docs)
+        {
+            // Tokenize the document's content by constructing an EnglishTokenStream around the document's content.
+            Reader reader = d.getContent(); 
+            EnglishTokenStream stream = new EnglishTokenStream(reader); //can access tokens through this stream
+
+            // Iterate through the tokens in the document, processing them using a BasicTokenProcessor,
+            //		and adding them to the HashSet vocabulary.
+            Iterable<String> tokens = stream.getTokens();
+            int i=0;
+            for(String t : tokens)
+            {
+
+                List<String> terms = new ArrayList(processor.processToken(t)); 
+                
+                for (String term: terms) 
+                {
+                    
+                    //we pass term, list<hashmap>,docid
+                    index.addTerm(term, i, d.getId()); 
+                    
+                }
+                i=i+1;
+    
+            }
+
+        }
+        
+ 
+        return index; 
+    }
+    
     
 }
