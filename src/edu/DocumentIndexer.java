@@ -8,12 +8,10 @@ package edu;
 import cecs429.documents.DirectoryCorpus;
 import cecs429.documents.Document;
 import cecs429.documents.DocumentCorpus;
-import cecs429.index.Index;
-import cecs429.index.Index2;
+import cecs429.documents.JsonFileDocument;
 import cecs429.index.InvertedIndex;
 import cecs429.index.Positional_inverted_index;
 import cecs429.index.Positional_posting;
-import cecs429.index.Posting;
 import cecs429.text.EnglishTokenStream;
 import cecs429.text.NewTokenProcessor;
 import java.io.Reader;
@@ -27,9 +25,11 @@ import java.util.Scanner;
  * @author dayanarios
  */
 public class DocumentIndexer {
-    private static DocumentCorpus corpus;
-    //private static InvertedIndex index; 
-    private static Positional_inverted_index index;
+    protected static DocumentCorpus corpus;
+    private static InvertedIndex index; 
+    private static Positional_inverted_index index2;
+    protected static String query;
+    protected static List<Positional_posting> postings; 
    
     
     /**
@@ -41,110 +41,121 @@ public class DocumentIndexer {
    {
        
        corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
-        //corpus = DirectoryCorpus.loadTextDirectory(path.toAbsolutePath(), ".txt"); //prev. .txt
-        index = posindexCorpus(corpus);
-        //index = indexCorpus(corpus); 
+       //corpus = DirectoryCorpus.loadTextDirectory(path.toAbsolutePath(), ".txt"); 
+       index2 = posindexCorpus(corpus);
+       //index = indexCorpus(corpus); 
         
-        
-        
-       //startSearchEngine(corpus, index);
-       startSearchEngine2(corpus, index); 
-        
-      
    }
-   
-   protected static void startSearchEngine(DocumentCorpus corpus, Index index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+    
+   /*
+   protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException 
    {
-       
-       
-        
          // TODO: fix this application so the user is asked for a term to search.
         boolean cont = true; 
 
         Scanner scan = new Scanner(System.in);
-        String query; 
+         
         List<String> queries; 
         
         NewTokenProcessor processor = new NewTokenProcessor();  
 
-        while(cont)
-        {
-            System.out.println("\nEnter a term to search (single word only): ");
-            query = scan.nextLine();
-            queries = new ArrayList(processor.processToken(query)); 
+        
+        //System.out.println("User is inputting a query"); 
+        queries = new ArrayList(processor.processToken(query)); 
 
-            if (query.equals("quit")){
-                cont = false;
-                break;
-            }
-
-            for(String q : queries)
-            {
-                if(index.getPostings(q).isEmpty())//(index.getPositional_posting(query).isEmpty())
-                {
-                    System.out.println(q + " not found in vocabulary");
-                }
-                else
-                {
-                    System.out.println("Documents that contain the query: " + query); 
-                   for (Posting p : index.getPostings(q)) { //(Positional_posting p : index.getPositional_posting(query)){
-
-                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
-                    } 
-                }
-            }
+        if (query.equals("quit")){
+            cont = false;
+            System.exit(0);
 
         }
+
+        for(String q : queries)
+        {
+            if(index.getPostings(q).isEmpty())
+            {
+                //clears list and repopulates it 
+                String notFound = "Your search " + query + " is not found in any documents";
+                GUI.JListModel.clear();
+                GUI.JListModel.addElement(notFound); 
+                
+            }
+            else
+            {
+               //clears list and repopulates it 
+               String docInfo;
+               GUI.JListModel.clear();
+               
+               
+               for (Posting p : index.getPostings(q)) 
+               { 
+                   docInfo = "Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle();
+                   GUI.JListModel.addElement(docInfo); 
+                
+                } 
+            }
+        }
         
-        System.exit(0);
+        GUI.SearchBarTextField.setText("Enter a new search or 'quit' to exit");
+        GUI.SearchBarTextField.selectAll();
+                
+            
+            
+        
+        
    }
+   */
    
    
-   
-   protected static void startSearchEngine2(DocumentCorpus corpus, Index2 index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+   protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException 
    {
        
-       
-        
          // TODO: fix this application so the user is asked for a term to search.
         boolean cont = true; 
 
         Scanner scan = new Scanner(System.in);
-        String query; 
+        
         List<String> queries; 
         
         NewTokenProcessor processor = new NewTokenProcessor();  
 
-        while(cont)
-        {
-            System.out.println("\nEnter a term to search (single word only): ");
-            query = scan.nextLine();
+        
+            //System.out.println("User is inputting a query"); 
             queries = new ArrayList(processor.processToken(query)); 
 
             if (query.equals("quit")){
                 cont = false;
-                break;
+                System.exit(0);
             }
 
             for(String q : queries)
             {
-                if(index.getPositional_posting(query).isEmpty())
+                if(index2.getPositional_posting(query).isEmpty()) //might be giving the error
                 {
-                    System.out.println(q + " not found in vocabulary");
+                    //clears list and repopulates it 
+                    String notFound = "Your search " + query + " is not found in any documents";
+                    GUI.JListModel.clear();
+                    GUI.JListModel.addElement(notFound); 
                 }
                 else
                 {
-                    System.out.println("Documents that contain the query: " + query); 
-                   for (Positional_posting p : index.getPositional_posting(query)){
+                    //clears list and repopulates it 
+                   String docInfo;
+                   GUI.JListModel.clear();
+                   postings = index2.getPositional_posting(query); 
+                   
+                   for (Positional_posting p : postings)
+                   {
+                       docInfo = corpus.getDocument(p.getDocumentId()).getTitle(); //+ " positions: "+ p.getPositions();
+                       GUI.JListModel.addElement(docInfo); 
 
-                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
                     } 
                 }
             }
 
-        }
         
-        System.exit(0);
+        GUI.SearchBarTextField.setText("Enter a new search or 'quit' to exit");
+        GUI.SearchBarTextField.selectAll();
+        
    }
    
    
@@ -239,6 +250,109 @@ public class DocumentIndexer {
  
         return index; 
     }
+    
+    /**
+     * Use this to run the program without the GUI.
+     * Comment out original startSearchEngine functions. 
+     * startSearchEngine is for the inverted index
+     * startSearchEngine2 is for the positional index 
+     */
+    /*
+    protected static void startSearchEngine(DocumentCorpus corpus, Index index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+   {
+       
+       
+        
+         // TODO: fix this application so the user is asked for a term to search.
+        boolean cont = true; 
+
+        Scanner scan = new Scanner(System.in);
+        String query; 
+        List<String> queries; 
+        
+        NewTokenProcessor processor = new NewTokenProcessor();  
+
+        while(cont)
+        {
+            System.out.println("\nEnter a term to search (single word only): ");
+            query = scan.nextLine();
+            queries = new ArrayList(processor.processToken(query)); 
+
+            if (query.equals("quit")){
+                cont = false;
+                break;
+            }
+
+            for(String q : queries)
+            {
+                if(index.getPostings(q).isEmpty())
+                {
+                    System.out.println(q + " not found in vocabulary");
+                }
+                else
+                {
+                    System.out.println("Documents that contain the query: " + query); 
+                   for (Posting p : index.getPostings(q)) { 
+
+                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
+                    } 
+                }
+            }
+
+        }
+        
+        System.exit(0);
+   }
+   
+   
+   
+   protected static void startSearchEngine2(DocumentCorpus corpus, Index2 index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+   {
+       
+       
+        
+         // TODO: fix this application so the user is asked for a term to search.
+        boolean cont = true; 
+
+        Scanner scan = new Scanner(System.in);
+        String query; 
+        List<String> queries; 
+        
+        NewTokenProcessor processor = new NewTokenProcessor();  
+
+        while(cont)
+        {
+            System.out.println("\nEnter a term to search (single word only): ");
+            query = scan.nextLine();
+            queries = new ArrayList(processor.processToken(query)); 
+
+            if (query.equals("quit")){
+                cont = false;
+                break;
+            }
+
+            for(String q : queries)
+            {
+                if(index.getPositional_posting(query).isEmpty())
+                {
+                    System.out.println(q + " not found in vocabulary");
+                }
+                else
+                {
+                    System.out.println("Documents that contain the query: " + query); 
+                   for (Positional_posting p : index.getPositional_posting(query)){
+
+                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle() + " positions: "+ p.getPositions());
+                    } 
+                }
+            }
+
+        }
+        
+        System.exit(0);
+   }
+   
+    */
     
     
 }

@@ -73,13 +73,6 @@ public class JsonFileDocument implements FileDocument{
         
         }
 
-    public String getMtitle() {
-        return mtitle;
-    }
-
-    public String getMbody() {
-        return mbody;
-    }
     
     public void setBody(String body) 
     {
@@ -89,6 +82,10 @@ public class JsonFileDocument implements FileDocument{
     public void setTitle(String title) 
     {
         this.mtitle = title;
+    }
+
+    public String getbody() {
+        return mbody;
     }
     
     

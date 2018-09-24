@@ -5,12 +5,22 @@
  */
 package edu;
 
+import cecs429.documents.JsonFileDocument;
+import cecs429.index.Positional_posting;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import static edu.DocumentIndexer.corpus;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,7 +36,7 @@ public class GUI extends javax.swing.JFrame {
     private int xCoord = dim.width/2; 
     private int yCoord = dim.height/2;
     String indexingMsg = "Indexing Corpus";
-    //private javax.swing.JButton indexingCorpusButton = new javax.swing.JButton(); 
+    protected static DefaultListModel JListModel = new DefaultListModel();; 
 
     /**
      * Creates new form GUI
@@ -52,9 +62,15 @@ public class GUI extends javax.swing.JFrame {
         DirectoryDirectionsLabel = new javax.swing.JLabel();
         indexingCorpusMessage = new javax.swing.JOptionPane();
         directoryChooser = new javax.swing.JFileChooser();
-        indexingCorpusButton = new javax.swing.JButton();
+        docFrame = new javax.swing.JFrame();
+        docTitleLabel = new javax.swing.JLabel();
+        docScrollPane = new javax.swing.JScrollPane();
+        docBodyLabel = new javax.swing.JLabel();
         ProjectTitleLabel = new javax.swing.JLabel();
         SearchBarTextField = new javax.swing.JTextField();
+        ResultsScrollPane = new javax.swing.JScrollPane();
+        JListModel.addElement("Search Results");
+        ResultsJList = new javax.swing.JList<>(JListModel);
 
         DirectoryDialogBox.setTitle("Select Directory");
         DirectoryDialogBox.setSize(new java.awt.Dimension(400, 246));
@@ -99,14 +115,42 @@ public class GUI extends javax.swing.JFrame {
         indexingCorpusMessage.setVisible(false);
         indexingCorpusMessage.setLocation(xCoord-indexingCorpusMessage.getSize().width/2, yCoord-indexingCorpusMessage.getSize().height/2);
 
-        directoryChooser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                directoryChooserActionPerformed(evt);
-            }
-        });
+        docFrame.setVisible(false);
+        docFrame.setSize(new java.awt.Dimension(550, 528));
+        docFrame.setLocation(xCoord-docFrame.getSize().width/2, yCoord-docFrame.getSize().height/2);
 
-        indexingCorpusButton.setText("Ok");
-        indexingCorpusButton.setEnabled(false);
+        docTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        docTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        docScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        docScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        docBodyLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        docBodyLabel.setPreferredSize(new java.awt.Dimension(19, 0));
+        docScrollPane.setViewportView(docBodyLabel);
+
+        javax.swing.GroupLayout docFrameLayout = new javax.swing.GroupLayout(docFrame.getContentPane());
+        docFrame.getContentPane().setLayout(docFrameLayout);
+        docFrameLayout.setHorizontalGroup(
+            docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(docFrameLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(docTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, docFrameLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        docFrameLayout.setVerticalGroup(
+            docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(docFrameLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(docTitleLabel)
+                .addGap(45, 45, 45)
+                .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(76, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -115,8 +159,23 @@ public class GUI extends javax.swing.JFrame {
         ProjectTitleLabel.setText("Positional Inverted Search Engine");
 
         SearchBarTextField.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        SearchBarTextField.setText("Search for query");
+        SearchBarTextField.setText("Enter a term to search");
         SearchBarTextField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        SearchBarTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchBarTextFieldActionPerformed(evt);
+            }
+        });
+
+        ResultsJList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ResultsJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        ResultsJList.setToolTipText("Displays results of search query");
+        ResultsJList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ResultsJListMouseClicked(evt);
+            }
+        });
+        ResultsScrollPane.setViewportView(ResultsJList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +185,8 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(91, 91, 91)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(SearchBarTextField)
-                    .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
+                    .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                    .addComponent(ResultsScrollPane))
                 .addContainerGap(91, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -136,7 +196,9 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(ProjectTitleLabel)
                 .addGap(44, 44, 44)
                 .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(191, Short.MAX_VALUE))
+                .addGap(73, 73, 73)
+                .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         pack();
@@ -152,7 +214,7 @@ public class GUI extends javax.swing.JFrame {
         if (directoryChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
         { 
            DirectoryDialogBox.dispose();
-           JOptionPane.showOptionDialog(indexingCorpusMessage, "Indexing corpus", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
+           JOptionPane.showOptionDialog(indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
            this.setVisible(true);
            //ProjectTitleLabel.setVisible(rootPaneCheckingEnabled);
            //SearchBarTextField.setVisible(rootPaneCheckingEnabled);
@@ -166,7 +228,7 @@ public class GUI extends javax.swing.JFrame {
                 DocumentIndexer.startIndexing(directoryPath);
                 
             } catch (Exception ex) {
-                System.out.println("problem indexing"); 
+                System.out.println("Problem with DocumentIndexer.startIndexing(directoryPath)"); 
             }
             
           
@@ -180,9 +242,55 @@ public class GUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_SearchDirectoriesButtonActionPerformed
 
-    private void directoryChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directoryChooserActionPerformed
+    private void SearchBarTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBarTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_directoryChooserActionPerformed
+        DocumentIndexer.query = SearchBarTextField.getText();
+        try {
+            
+            DocumentIndexer.startSearchEngine(); 
+        } catch (Exception ex) 
+        {
+            System.out.println("Problem with DocumentIndexer.startSearchEngine()");
+        }
+    }//GEN-LAST:event_SearchBarTextFieldActionPerformed
+
+    private void ResultsJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultsJListMouseClicked
+        // TODO add your handling code here:
+         javax.swing.JList list = (javax.swing.JList)evt.getSource();
+        if (evt.getClickCount() == 2) {
+            int index = list.locationToIndex(evt.getPoint());
+            
+            docFrame.setVisible(true); 
+            
+            try{
+                
+                docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
+                BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());  
+                //Reader reader = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent();
+                
+                //read the contents of the json file to display them
+                String contents = "<html>";
+                String line; 
+                while((line = reader.readLine()) != null)
+                {
+                    contents+=line;
+                }
+                contents +="</html>"; 
+                
+                
+                docBodyLabel.setText(contents);
+            }
+            catch(ArrayIndexOutOfBoundsException ex)
+            {
+                System.out.println("Array index out of bounds exception");
+            } 
+            catch (IOException ex) 
+            {
+             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }//GEN-LAST:event_ResultsJListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -238,10 +346,15 @@ public class GUI extends javax.swing.JFrame {
     private static javax.swing.JDialog DirectoryDialogBox;
     private javax.swing.JLabel DirectoryDirectionsLabel;
     private javax.swing.JLabel ProjectTitleLabel;
-    private javax.swing.JTextField SearchBarTextField;
+    protected static javax.swing.JList<String> ResultsJList;
+    private javax.swing.JScrollPane ResultsScrollPane;
+    protected static javax.swing.JTextField SearchBarTextField;
     private javax.swing.JButton SearchDirectoriesButton;
     private javax.swing.JFileChooser directoryChooser;
-    protected static javax.swing.JButton indexingCorpusButton;
+    private javax.swing.JLabel docBodyLabel;
+    private javax.swing.JFrame docFrame;
+    private javax.swing.JScrollPane docScrollPane;
+    protected static javax.swing.JLabel docTitleLabel;
     private javax.swing.JOptionPane indexingCorpusMessage;
     // End of variables declaration//GEN-END:variables
 }
