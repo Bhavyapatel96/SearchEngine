@@ -42,7 +42,6 @@ public class Positional_inverted_index implements Index2{
                //we have to check docID first, if its there, add positions only. If not, add docID>positions both
                
                
-               
                 List<Positional_posting> list = mInvertedIndex.get(term);
                
                 
@@ -57,9 +56,7 @@ public class Positional_inverted_index implements Index2{
                    
                 
                 }
-             
-                
-                 
+               
                  
             }
                
@@ -74,37 +71,7 @@ public class Positional_inverted_index implements Index2{
             }
         
         }
-        /*
-	public void addTerm(String term, int documentId) {  //assumes all keys are present
-		//int vIndex = Collections.binarySearch(mVocabulary, term);
-                List<Positional_posting> results = new ArrayList<>();  //will store results
-                
-		        
-                if(mInvertedIndex.containsKey(term)) //if term is already a key just add values
-                {
-                        results = mInvertedIndex.get(term);
-                        
-                        List l2 = null;
-                        
-                        int lastIndex = results.size()-1; //index of last element
-                        if(results.get(lastIndex).getDocumentId() != documentId)
-                        {
-                            Positional_posting temp = new Positional_posting(documentId,l2); //docId is index in mVocab
-                            results.add(temp);
-                        }
-                   
-                }
-                else    //key doesnt exsist must add it
-                {
-                    List l2=null;
-                    Positional_posting temp = new Positional_posting(documentId,l2); //make a list to hold posting to add to index 
-                    results.add(temp); 
-                    mInvertedIndex.put(term, results); //second argument is a list thus need to use results
-                }
-                       
-	
-	}
-    */
+        
 	public List<Positional_posting> getPositional_posting (String term) { //returns all docs that contian the terms
 		
                 HashMap<String,List<Positional_posting>> h;

@@ -20,9 +20,7 @@ import static jdk.nashorn.internal.objects.NativeArray.map;
 public class Positional_posting {
 
     private int mDocumentId;
-  
- //   private HashMap<Integer, List<Integer>> h = new HashMap<Integer, List<Integer>>();
-    private List<Integer> h; //h == positions
+    private List<Integer> h; //h = positions
     
     public Positional_posting(int docID, int pos) {
 
@@ -32,18 +30,6 @@ public class Positional_posting {
         
 
     }
-
-  /*  public Positional_posting(int docID) {
-        System.out.println(h);
-        mDocumentId = docID;
-
-        mPosting = h.get(mDocumentId);
-        h.putIfAbsent(docID, mPosting);
-      //  h.put(mDocumentId, mPosting);
-        h1.add(h);
-    }*/
-
-    
 
     public List getPositions(){
     //System.out.print(mDocumentId);

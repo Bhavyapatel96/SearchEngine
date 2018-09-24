@@ -8,10 +8,10 @@ package edu;
 import cecs429.documents.DirectoryCorpus;
 import cecs429.documents.Document;
 import cecs429.documents.DocumentCorpus;
-import cecs429.documents.JsonFileDocument;
 import cecs429.index.InvertedIndex;
 import cecs429.index.Positional_inverted_index;
 import cecs429.index.Positional_posting;
+import cecs429.index.Posting;
 import cecs429.text.EnglishTokenStream;
 import cecs429.text.NewTokenProcessor;
 import java.io.Reader;
@@ -26,8 +26,8 @@ import java.util.Scanner;
  */
 public class DocumentIndexer {
     protected static DocumentCorpus corpus;
-    private static InvertedIndex index; 
-    private static Positional_inverted_index index2;
+    //private static InvertedIndex index; 
+    private static Positional_inverted_index index;
     protected static String query;
     protected static List<Positional_posting> postings; 
    
@@ -41,11 +41,15 @@ public class DocumentIndexer {
    {
        
        corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
-       //corpus = DirectoryCorpus.loadTextDirectory(path.toAbsolutePath(), ".txt"); 
-       index2 = posindexCorpus(corpus);
+        
+       index = posindexCorpus(corpus);
        //index = indexCorpus(corpus); 
         
    }
+    
+   /**
+    *Used to compare results of positional index with for Inverted Index.  
+    */ 
     
    /*
    protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException 
@@ -105,7 +109,6 @@ public class DocumentIndexer {
    }
    */
    
-   
    protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException 
    {
        
@@ -129,7 +132,7 @@ public class DocumentIndexer {
 
             for(String q : queries)
             {
-                if(index2.getPositional_posting(query).isEmpty()) //might be giving the error
+                if(index.getPositional_posting(query).isEmpty()) //might be giving the error
                 {
                     //clears list and repopulates it 
                     String notFound = "Your search " + query + " is not found in any documents";
@@ -141,7 +144,7 @@ public class DocumentIndexer {
                     //clears list and repopulates it 
                    String docInfo;
                    GUI.JListModel.clear();
-                   postings = index2.getPositional_posting(query); 
+                   postings = index.getPositional_posting(query); 
                    
                    for (Positional_posting p : postings)
                    {
@@ -164,7 +167,6 @@ public class DocumentIndexer {
     private static InvertedIndex indexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         
         
-        //BasicTokenProcessor processor = new BasicTokenProcessor();
         NewTokenProcessor processor = new NewTokenProcessor(); 
 
         // First, build the vocabulary hash set.
@@ -210,8 +212,7 @@ public class DocumentIndexer {
     
     private static Positional_inverted_index posindexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         
-        
-        //BasicTokenProcessor processor = new BasicTokenProcessor();
+       
         NewTokenProcessor processor = new NewTokenProcessor(); 
         
         Iterable<Document> docs = corpus.getDocuments(); 
@@ -229,18 +230,18 @@ public class DocumentIndexer {
             //		and adding them to the HashSet vocabulary.
             Iterable<String> tokens = stream.getTokens();
             int i=0;
-            for(String t : tokens)
+            for(String token : tokens)
             {
 
-                List<String> terms = new ArrayList(processor.processToken(t)); 
+                List<String> word = new ArrayList(processor.processToken(token)); 
                 
-                for (String term: terms) 
-                {
-                    
-                    //we pass term, list<hashmap>,docid
-                    index.addTerm(term, i, d.getId()); 
-                    
+                if (word.size() > 0) {
+
+                    index.addTerm(word.get(0), i, d.getId());
+
                 }
+                
+                
                 i=i+1;
     
             }
@@ -253,106 +254,49 @@ public class DocumentIndexer {
     
     /**
      * Use this to run the program without the GUI.
-     * Comment out original startSearchEngine functions. 
-     * startSearchEngine is for the inverted index
-     * startSearchEngine2 is for the positional index 
+     * Comment out all of main in GUI.java 
+     * fix imports
+     * Use main below
+     * 
      */
-    /*
-    protected static void startSearchEngine(DocumentCorpus corpus, Index index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
-   {
-       
-       
-        
-         // TODO: fix this application so the user is asked for a term to search.
-        boolean cont = true; 
-
-        Scanner scan = new Scanner(System.in);
-        String query; 
-        List<String> queries; 
-        
-        NewTokenProcessor processor = new NewTokenProcessor();  
-
-        while(cont)
-        {
-            System.out.println("\nEnter a term to search (single word only): ");
-            query = scan.nextLine();
-            queries = new ArrayList(processor.processToken(query)); 
-
-            if (query.equals("quit")){
-                cont = false;
-                break;
-            }
-
-            for(String q : queries)
-            {
-                if(index.getPostings(q).isEmpty())
-                {
-                    System.out.println(q + " not found in vocabulary");
-                }
-                else
-                {
-                    System.out.println("Documents that contain the query: " + query); 
-                   for (Posting p : index.getPostings(q)) { 
-
-                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle());// + " positions: "+ p.getPositions());
-                    } 
-                }
-            }
-
-        }
-        
-        System.exit(0);
-   }
-   
-   
-   
-   protected static void startSearchEngine2(DocumentCorpus corpus, Index2 index) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
-   {
-       
-       
-        
-         // TODO: fix this application so the user is asked for a term to search.
-        boolean cont = true; 
-
-        Scanner scan = new Scanner(System.in);
-        String query; 
-        List<String> queries; 
-        
-        NewTokenProcessor processor = new NewTokenProcessor();  
-
-        while(cont)
-        {
-            System.out.println("\nEnter a term to search (single word only): ");
-            query = scan.nextLine();
-            queries = new ArrayList(processor.processToken(query)); 
-
-            if (query.equals("quit")){
-                cont = false;
-                break;
-            }
-
-            for(String q : queries)
-            {
-                if(index.getPositional_posting(query).isEmpty())
-                {
-                    System.out.println(q + " not found in vocabulary");
-                }
-                else
-                {
-                    System.out.println("Documents that contain the query: " + query); 
-                   for (Positional_posting p : index.getPositional_posting(query)){
-
-                    System.out.println("Document Title: " + corpus.getDocument(p.getDocumentId()).getTitle() + " positions: "+ p.getPositions());
-                    } 
-                }
-            }
-
-        }
-        
-        System.exit(0);
-   }
-   
-    */
     
+    /*
+     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+
+        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json"); //to run json files
+        //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");// To run .txt files
+
+        Positional_inverted_index index = posindexCorpus(corpus);
+
+        boolean cont = true;
+
+        Scanner scan = new Scanner(System.in);
+        String query;
+
+        while (cont) {
+            System.out.println("\nEnter a term to search (single word only): ");
+            query = scan.nextLine();
+            query = query.toLowerCase();
+
+            if (query.equals("quit")) {
+                cont = false;
+                break;
+            }
+
+            if (index.getPositional_posting(query).isEmpty()) {
+                System.out.println(query + " not found in vocabulary");
+            } else {
+                System.out.println("Documents that contain the query: " + query);
+
+                for (Positional_posting p4 : index.getPositional_posting(query)) {
+
+                    System.out.println("Document Number: " + p4.getDocumentId() + " Positions: " + p4.getPositions());
+                }
+            }
+
+        }
+
+    }
+    */
     
 }
