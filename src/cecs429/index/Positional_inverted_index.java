@@ -17,14 +17,14 @@ import static jdk.nashorn.internal.objects.NativeArray.map;
  *
  * @author dayanarios
  */
-public class Positional_inverted_index implements Index2{
-    HashMap<String, List<Positional_posting>> mInvertedIndex;
+public class Positional_inverted_index implements Index{
+    HashMap<String, List<Posting>> mInvertedIndex;
     private List<String> mVocabulary;
   
     
     public Positional_inverted_index() 
     {
-        mInvertedIndex = new HashMap<String, List<Positional_posting>>();
+        mInvertedIndex = new HashMap<String, List<Posting>>();
         mVocabulary = new ArrayList<String>();
         
     }
@@ -42,16 +42,16 @@ public class Positional_inverted_index implements Index2{
                //we have to check docID first, if its there, add positions only. If not, add docID>positions both
                
                
-                List<Positional_posting> list = mInvertedIndex.get(term);
+                List<Posting> list = mInvertedIndex.get(term);
                
                 
                 if (list.get(list.size()-1).getDocumentId()==docID){
                     //List<Positional_posting> l1= new ArrayList<>();
-                    Positional_posting p=list.get(list.size()-1);
+                    Posting p=list.get(list.size()-1);
                     p.addPosition(position);
                 }
                 else{
-                    Positional_posting p=new Positional_posting(docID,position);
+                    Posting p=new Posting(docID,position);
                     list.add(p);
                    
                 
@@ -63,8 +63,8 @@ public class Positional_inverted_index implements Index2{
             
             else{
                 
-                List<Positional_posting> list = new ArrayList<>();
-                Positional_posting posting= new Positional_posting(docID, position);
+                List<Posting> list = new ArrayList<>();
+                Posting posting= new Posting(docID, position);
                 list.add(posting);
                 mInvertedIndex.put(term, list);
                
@@ -72,10 +72,10 @@ public class Positional_inverted_index implements Index2{
         
         }
         
-	public List<Positional_posting> getPositional_posting (String term) { //returns all docs that contian the terms
+	public List<Posting> getPositional_posting (String term) { //returns all docs that contian the terms
 		
-                HashMap<String,List<Positional_posting>> h;
-                List<Positional_posting> results = new ArrayList<>();
+                //HashMap<String,List<Posting>> h;
+                List<Posting> results = new ArrayList<>();
 		
 		
                 

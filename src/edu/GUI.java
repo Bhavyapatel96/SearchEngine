@@ -6,7 +6,7 @@
 package edu;
 
 import cecs429.documents.JsonFileDocument;
-import cecs429.index.Positional_posting;
+import cecs429.index.Posting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import static edu.DocumentIndexer.corpus;
