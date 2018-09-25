@@ -12,7 +12,7 @@ import cecs429.index.Index;
 import cecs429.index.Positional_inverted_index;
 import cecs429.index.Posting;
 import cecs429.query.BooleanQueryParser;
-import cecs429.query.TermLiteral;
+import cecs429.query.QueryComponent;
 import cecs429.text.EnglishTokenStream;
 import cecs429.text.NewTokenProcessor;
 import cecs429.text.TokenProcessor;
@@ -53,18 +53,16 @@ public class DocumentIndexer {
         
         if(!specialQueries(query))
         {
-             //for single query searches
-            TermLiteral termLiteral; 
-
-
-            termLiteral = new TermLiteral(query); 
-
-            if(termLiteral.getPostings(index).isEmpty()) //might be giving the error
+            BooleanQueryParser bParser = new BooleanQueryParser();
+            QueryComponent qComponent = bParser.parseQuery(query);
+            postings = qComponent.getPostings(index);
+            
+            if(postings.isEmpty()) //might be giving the error
             {
                 clickList = false; 
                 //clears list and repopulates it 
                 String notFound = "Your search " + query + " is not found in any documents";
-                //GUI.JListModel.clear();
+                GUI.JListModel.clear();
                 GUI.JListModel.addElement(notFound); 
             }
             else
@@ -74,8 +72,7 @@ public class DocumentIndexer {
                String docInfo;
                //GUI.ResultsJList.setEnabled(true);
                GUI.JListModel.clear();
-               postings = termLiteral.getPostings(index);
-
+               
                for (Posting p : postings)
                {
                    docInfo = corpus.getDocument(p.getDocumentId()).getTitle(); 
@@ -166,6 +163,10 @@ public class DocumentIndexer {
             
             
         }
+        else if(subqueries[0].equals("index"))
+        {
+            
+        }
             
         
         
@@ -184,14 +185,15 @@ public class DocumentIndexer {
      * 
      */
     
-  /*  
-     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+  /*
+       public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 
-        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("/Users/dayanarios/Desktop/10jsonfiles").toAbsolutePath(), ".json"); //to run json files
+        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json"); //to run json files
         //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");// To run .txt files
-
         Positional_inverted_index index = posindexCorpus(corpus);
-
+        List<Posting> result = new ArrayList<>();
+        List<QueryComponent> l = new ArrayList<>();
+        
         boolean cont = true;
 
         Scanner scan = new Scanner(System.in);
@@ -206,29 +208,34 @@ public class DocumentIndexer {
                 cont = false;
                 break;
             }
-
-            if (index.getPositional_posting(query).isEmpty()) {
-                System.out.println(query + " not found in vocabulary");
-            } else {
-                System.out.println("Documents that contain the query: " + query);
-
-                for (Posting p4 : index.getPositional_posting(query)) {
-
-                    System.out.println("Document Number: " + p4.getDocumentId() + " Positions: " + p4.getPositions());
-                }
-            }
-
-        }
-
+             BooleanQueryParser b = new BooleanQueryParser();
+             QueryComponent c = b.parseQuery(query);
+             result=c.getPostings(index);
+             if(result.isEmpty()){
+                 System.out.println("No results");
+             }
+             else{
+                 for (Posting p : result)
+                 {
+                 
+                     System.out.println("results: " + p.getDocumentId());
+                 }
+             }
+                
+           
     }
+
    
 //        BooleanQueryParser temp = new BooleanQueryParser(); 
 //        temp.parseQuery("-hello");
 //        temp.parseQuery("\"hello\"");
 //
 //        System.out.println("");
-//     }
 
-*/
+
+
     
+    }
+*/
 }
+

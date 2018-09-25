@@ -328,21 +328,15 @@ public class GUI extends javax.swing.JFrame {
         }
         catch (Exception ex){}
         //</editor-fold>
-
+    
         /* Create and display the form */
-       java.awt.EventQueue.invokeLater(new Runnable() {
+      java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GUI().setVisible(false);
-                
-                
                 
             }
         });
         
-        
-       
-        
-        //System.exit(0); //need to dispose of current gui
         
     }
 

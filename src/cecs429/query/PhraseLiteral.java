@@ -30,14 +30,43 @@ public class PhraseLiteral implements QueryComponent {
 	 */
 	public PhraseLiteral(String terms) {
 		mTerms.addAll(Arrays.asList(terms.split(" ")));
+                System.out.println("term before split: " + terms );
+                for(String term : mTerms)
+                {
+                    System.out.println("term after split: " + term );
+                }
+                
 	}
 	
 	@Override
 	public List<Posting> getPostings(Index index) {
+            TokenProcessor processor = new NewTokenProcessor(); 
+            List<String> queries = new ArrayList(); 
+            List<String> temp;
             
-		return null;
-		// TODO: program this method. Retrieve the postings for the individual terms in the phrase,
-		// and positional merge them together.
+            try {
+                for(String term: mTerms)
+                {
+                    temp = new ArrayList(processor.processToken(term));
+                    for(String t: temp)
+                    {
+                        queries.add(t); 
+                    }
+                }
+                
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(TermLiteral.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(TermLiteral.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(TermLiteral.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            // TODO: program this method. Retrieve the postings for the individual terms in the phrase,
+            // and positional merge them together.
+		
+            return null;
+		
 	}
 	
 	@Override
