@@ -255,41 +255,44 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchBarTextFieldActionPerformed
 
     private void ResultsJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultsJListMouseClicked
-        // TODO add your handling code here:
-         javax.swing.JList list = (javax.swing.JList)evt.getSource();
-        if (evt.getClickCount() == 2) {
-            int index = list.locationToIndex(evt.getPoint());
-            
-            docFrame.setVisible(true); 
-            
-            try{
+        
+        if(DocumentIndexer.clickList)
+        {
+            // TODO add your handling code here:
+            javax.swing.JList list = (javax.swing.JList) evt.getSource();
+            if (evt.getClickCount() == 2) {
+                int index = list.locationToIndex(evt.getPoint());
                 
-                docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
-                BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());  
-                //Reader reader = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent();
-                
-                //read the contents of the json file to display them
-                String contents = "<html>";
-                String line; 
-                while((line = reader.readLine()) != null)
-                {
-                    contents+=line;
-                }
-                contents +="</html>"; 
-                
-                
-                docBodyLabel.setText(contents);
-            }
-            catch(ArrayIndexOutOfBoundsException ex)
-            {
-                System.out.println("Array index out of bounds exception");
-            } 
-            catch (IOException ex) 
-            {
-             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                docFrame.setVisible(true);
 
+                try {
+
+                    docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
+                    BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());
+                    //Reader reader = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent();
+
+                    //read the contents of the json file to display them
+                    String contents = "<html>";
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        contents += line;
+                    }
+                    contents += "</html>";
+
+                    docBodyLabel.setText(contents);
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    System.out.println("Array index out of bounds exception");
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+                
+            }
         }
+        
+        SearchBarTextField.selectAll();
+        
     }//GEN-LAST:event_ResultsJListMouseClicked
 
     /**

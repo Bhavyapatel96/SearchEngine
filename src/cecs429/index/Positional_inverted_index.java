@@ -35,6 +35,7 @@ public class Positional_inverted_index implements Index{
          * matrix. only adds the docID (posting) once in the list for each 
          * given term
 	 */
+   
         public void addTerm(String term, int position , int docID){
             
             //k is the list containing hashmap of docid>positions

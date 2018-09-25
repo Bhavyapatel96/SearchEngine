@@ -50,7 +50,7 @@ public class BooleanQueryParser {
 		do {
 			// Identify the next subquery: a portion of the query up to the next + sign.
 			StringBounds nextSubquery = findNextSubquery(query, start);
-			// Extract the identified subquery into its own string.
+			// Extract the identified subquery into its own string. (start, end)
 			String subquery = query.substring(nextSubquery.start, nextSubquery.start + nextSubquery.length);
 			int subStart = 0;
 			
@@ -69,7 +69,7 @@ public class BooleanQueryParser {
 				
 			} while (subStart < subquery.length());
 			
-			// After processing all literals, we are left with a conjunctive list
+			// After processing all literals, we are left with a conjunctive list(AND)
 			// of query components, and must fold that list into the final disjunctive list
 			// of components.
 			
@@ -143,7 +143,7 @@ public class BooleanQueryParser {
 		int subLength = subquery.length();
 		int lengthOut;
 		
-		// Skip past white space.
+		// Skip past white space. gets to actual word
 		while (subquery.charAt(startIndex) == ' ') {
 			++startIndex;
 		}
@@ -155,19 +155,38 @@ public class BooleanQueryParser {
 			lengthOut = subLength - startIndex;
 		}
 		else {
-			lengthOut = nextSpace - startIndex;
+			lengthOut = nextSpace - startIndex; //length of term
 		}
 		
-		// This is a term literal containing a single term.
-		return new Literal(
-		 new StringBounds(startIndex, lengthOut),
-		 new TermLiteral(subquery.substring(startIndex, startIndex + lengthOut)));
-		
-		/*
+                /*
 		TODO:
 		Instead of assuming that we only have single-term literals, modify this method so it will create a PhraseLiteral
 		object if the first non-space character you find is a double-quote ("). In this case, the literal is not ended
 		by the next space character, but by the next double-quote character.
 		 */
+                String literal = subquery.substring(startIndex, startIndex + lengthOut);
+                
+                if(literal.charAt(0) == '"') //finds a phrase literal
+                {
+                    String temp = literal.substring(startIndex+1, literal.length());
+                    int posOfQuote = temp.indexOf('"');
+                    
+                    System.out.println("found a phrase literal: " + literal);
+                    
+                    return new Literal(
+                    new StringBounds(startIndex, lengthOut),
+                    new PhraseLiteral(subquery.substring(startIndex, startIndex + lengthOut)));
+                }
+                else 
+                {
+                    System.out.println("found a term literal: " + literal);
+                    
+                    // This is a term literal containing a single term.
+                    return new Literal(
+                    new StringBounds(startIndex, lengthOut),
+                    new TermLiteral(subquery.substring(startIndex, startIndex + lengthOut)));
+                }
+                
+                
 	}
 }

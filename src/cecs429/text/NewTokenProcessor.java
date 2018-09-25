@@ -40,7 +40,7 @@ public class NewTokenProcessor implements TokenProcessor {
                         concatenatedString+= splitString[i]; 
                     }
 
-                    terms.add(concatenatedString.toLowerCase());
+                    terms.add(0, concatenatedString.toLowerCase());
                 }
                 else{
                     terms.add(modifiedString.toLowerCase()); 
