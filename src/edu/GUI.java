@@ -63,14 +63,16 @@ public class GUI extends javax.swing.JFrame {
         indexingCorpusMessage = new javax.swing.JOptionPane();
         directoryChooser = new javax.swing.JFileChooser();
         docFrame = new javax.swing.JFrame();
-        docTitleLabel = new javax.swing.JLabel();
-        docScrollPane = new javax.swing.JScrollPane();
+        docBodyScrollPane = new javax.swing.JScrollPane();
         docBodyLabel = new javax.swing.JLabel();
+        docTitleScrollPane = new javax.swing.JScrollPane();
+        docTitleLabel = new javax.swing.JLabel();
         ProjectTitleLabel = new javax.swing.JLabel();
         SearchBarTextField = new javax.swing.JTextField();
         ResultsScrollPane = new javax.swing.JScrollPane();
-        JListModel.addElement("Search Results");
+        //JListModel.addElement("Search Results");
         ResultsJList = new javax.swing.JList<>(JListModel);
+        ResultsLabel = new javax.swing.JLabel();
 
         DirectoryDialogBox.setTitle("Select Directory");
         DirectoryDialogBox.setSize(new java.awt.Dimension(400, 246));
@@ -116,51 +118,74 @@ public class GUI extends javax.swing.JFrame {
         indexingCorpusMessage.setLocation(xCoord-indexingCorpusMessage.getSize().width/2, yCoord-indexingCorpusMessage.getSize().height/2);
 
         docFrame.setVisible(false);
+        docFrame.setMaximumSize(new java.awt.Dimension(550, 528));
+        docFrame.setMinimumSize(new java.awt.Dimension(550, 528));
         docFrame.setSize(new java.awt.Dimension(550, 528));
         docFrame.setLocation(xCoord-docFrame.getSize().width/2, yCoord-docFrame.getSize().height/2);
 
-        docTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
-        docTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        docScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        docScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        docBodyScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        docBodyScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        docBodyScrollPane.setMaximumSize(new java.awt.Dimension(32767, 30));
+        docBodyScrollPane.setMinimumSize(new java.awt.Dimension(450, 30));
 
         docBodyLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        docBodyLabel.setPreferredSize(new java.awt.Dimension(19, 0));
-        docScrollPane.setViewportView(docBodyLabel);
+        docBodyLabel.setMinimumSize(new java.awt.Dimension(450, 2000));
+        docBodyLabel.setPreferredSize(new java.awt.Dimension(450, 10000));
+        docBodyScrollPane.setViewportView(docBodyLabel);
+
+        docTitleScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        docTitleScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        docTitleScrollPane.setMinimumSize(new java.awt.Dimension(450, 28));
+        docTitleScrollPane.setPreferredSize(new java.awt.Dimension(450, 28));
+
+        docTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        docTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        docTitleLabel.setMaximumSize(new java.awt.Dimension(1000, 30));
+        docTitleLabel.setMinimumSize(new java.awt.Dimension(450, 30));
+        docTitleLabel.setPreferredSize(new java.awt.Dimension(1000, 30));
+        docTitleScrollPane.setViewportView(docTitleLabel);
 
         javax.swing.GroupLayout docFrameLayout = new javax.swing.GroupLayout(docFrame.getContentPane());
         docFrame.getContentPane().setLayout(docFrameLayout);
         docFrameLayout.setHorizontalGroup(
             docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(docFrameLayout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(docTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, docFrameLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(docFrameLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(docTitleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         docFrameLayout.setVerticalGroup(
             docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(docFrameLayout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addComponent(docTitleLabel)
-                .addGap(45, 45, 45)
-                .addComponent(docScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addComponent(docTitleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(637, 469));
 
         ProjectTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         ProjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ProjectTitleLabel.setText("Positional Inverted Search Engine");
+        ProjectTitleLabel.setMaximumSize(new java.awt.Dimension(147, 28));
+        ProjectTitleLabel.setMinimumSize(new java.awt.Dimension(147, 24));
+        ProjectTitleLabel.setPreferredSize(new java.awt.Dimension(147, 28));
+        ProjectTitleLabel.setRequestFocusEnabled(false);
+        ProjectTitleLabel.setSize(new java.awt.Dimension(147, 28));
 
         SearchBarTextField.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         SearchBarTextField.setText("Enter a term to search");
         SearchBarTextField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        SearchBarTextField.setMaximumSize(new java.awt.Dimension(147, 22));
+        SearchBarTextField.setMinimumSize(new java.awt.Dimension(147, 22));
+        SearchBarTextField.setSize(new java.awt.Dimension(147, 22));
         SearchBarTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SearchBarTextFieldActionPerformed(evt);
@@ -170,12 +195,22 @@ public class GUI extends javax.swing.JFrame {
         ResultsJList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ResultsJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         ResultsJList.setToolTipText("Displays results of search query");
+        ResultsJList.setMaximumSize(new java.awt.Dimension(147, 32767));
+        ResultsJList.setMinimumSize(new java.awt.Dimension(147, 206));
+        ResultsJList.setPreferredSize(new java.awt.Dimension(147, 32767));
+        ResultsJList.setSize(new java.awt.Dimension(147, 32767));
         ResultsJList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ResultsJListMouseClicked(evt);
             }
         });
         ResultsScrollPane.setViewportView(ResultsJList);
+
+        ResultsLabel.setBackground(new java.awt.Color(255, 255, 255));
+        ResultsLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        ResultsLabel.setText("Search Results");
+        ResultsLabel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ResultsLabel.setOpaque(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,7 +219,8 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(SearchBarTextField)
+                    .addComponent(ResultsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                    .addComponent(SearchBarTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                     .addComponent(ResultsScrollPane))
                 .addContainerGap(91, Short.MAX_VALUE))
@@ -193,12 +229,14 @@ public class GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(ProjectTitleLabel)
+                .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
                 .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73)
-                .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(ResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         pack();
@@ -216,8 +254,6 @@ public class GUI extends javax.swing.JFrame {
            DirectoryDialogBox.dispose();
            JOptionPane.showOptionDialog(indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
            this.setVisible(true);
-           //ProjectTitleLabel.setVisible(rootPaneCheckingEnabled);
-           //SearchBarTextField.setVisible(rootPaneCheckingEnabled);
            File file = directoryChooser.getSelectedFile(); 
            directoryPath = file.toPath(); 
            
@@ -243,15 +279,23 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchDirectoriesButtonActionPerformed
 
     private void SearchBarTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBarTextFieldActionPerformed
-        // TODO add your handling code here:
-        DocumentIndexer.query = SearchBarTextField.getText();
-        try {
-            
-            DocumentIndexer.startSearchEngine(); 
-        } catch (Exception ex) 
-        {
-            System.out.println("Problem with DocumentIndexer.startSearchEngine()");
+        
+            // TODO add your handling code here:
+            DocumentIndexer.query = SearchBarTextField.getText();
+        try {   
+            if(!DocumentIndexer.newCorpus())
+            {
+                
+                DocumentIndexer.startSearchEngine();
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_SearchBarTextFieldActionPerformed
 
     private void ResultsJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultsJListMouseClicked
@@ -345,14 +389,16 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel DirectoryDirectionsLabel;
     private javax.swing.JLabel ProjectTitleLabel;
     protected static javax.swing.JList<String> ResultsJList;
+    protected static javax.swing.JLabel ResultsLabel;
     private javax.swing.JScrollPane ResultsScrollPane;
     protected static javax.swing.JTextField SearchBarTextField;
     private javax.swing.JButton SearchDirectoriesButton;
     private javax.swing.JFileChooser directoryChooser;
     private javax.swing.JLabel docBodyLabel;
+    private javax.swing.JScrollPane docBodyScrollPane;
     private javax.swing.JFrame docFrame;
-    private javax.swing.JScrollPane docScrollPane;
     protected static javax.swing.JLabel docTitleLabel;
-    private javax.swing.JOptionPane indexingCorpusMessage;
+    private javax.swing.JScrollPane docTitleScrollPane;
+    protected static javax.swing.JOptionPane indexingCorpusMessage;
     // End of variables declaration//GEN-END:variables
 }

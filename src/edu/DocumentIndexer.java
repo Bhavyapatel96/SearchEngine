@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,7 +33,8 @@ public class DocumentIndexer {
     private static Index index;
     protected static String query;
     protected static List<Posting> postings; 
-    protected static Boolean clickList = false; 
+    protected static Boolean clickList = false;  //prevents clicking the list when there is nothing to click
+
    
     
     /**
@@ -43,8 +45,15 @@ public class DocumentIndexer {
     protected static void startIndexing(Path path) throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
        corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
+       long startTime = System.nanoTime(); 
        index = posindexCorpus(corpus);
+       long endTime = System.nanoTime(); 
+       
+       long elapsedTime = (endTime - startTime);
+       double seconds = (double)elapsedTime / 1000000000.0;
+       GUI.ResultsLabel.setText("Total Indexing Time: " + seconds + " seconds");
         
+       
    }
   
    protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException 
@@ -53,25 +62,30 @@ public class DocumentIndexer {
         
         if(!specialQueries(query))
         {
+            //newCorpus = false; 
             BooleanQueryParser bParser = new BooleanQueryParser();
             QueryComponent qComponent = bParser.parseQuery(query);
             postings = qComponent.getPostings(index);
             
             if(postings.isEmpty()) //might be giving the error
             {
-                clickList = false; 
-                //clears list and repopulates it 
-                String notFound = "Your search " + query + " is not found in any documents";
                 GUI.JListModel.clear();
-                GUI.JListModel.addElement(notFound); 
+                GUI.ResultsLabel.setText("");
+                clickList = false; 
+                
+                String notFound = "Your search '" + query + "' is not found in any documents";
+                GUI.ResultsLabel.setText(notFound); 
+                
             }
             else
             {
                 clickList = true; 
+                
                 //clears list and repopulates it 
                String docInfo;
-               //GUI.ResultsJList.setEnabled(true);
+               
                GUI.JListModel.clear();
+               GUI.ResultsLabel.setText("");
                
                for (Posting p : postings)
                {
@@ -79,6 +93,7 @@ public class DocumentIndexer {
                    GUI.JListModel.addElement(docInfo); 
 
                 } 
+               GUI.ResultsLabel.setText("Total Documents Found: " + postings.size());
             }
 
         }
@@ -129,6 +144,7 @@ public class DocumentIndexer {
 
         }
         
+        //index.print(); 
  
         return index; 
     }
@@ -136,6 +152,7 @@ public class DocumentIndexer {
     private static Boolean specialQueries(String query) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         clickList = false; 
+        //newCorpus = true;
         
         if (query.equals("q")){
 
@@ -147,32 +164,60 @@ public class DocumentIndexer {
         
         if(subqueries[0].equals("stem")) //first term in suqueries tells computer what to do 
         {
+            GUI.JListModel.clear();
+            GUI.ResultsLabel.setText("");
             TokenProcessor processor = new NewTokenProcessor(); 
             if(subqueries.length > 1)   //user meant to stem the token not to search stem
             {
                 List<String> stems = processor.processToken(subqueries[1]);
                 
                 //clears list and repopulates it 
-                String notFound = "Stem of query '" + subqueries[1] + "' is '" + stems.get(0) + "'";
-                //GUI.ResultsJList.setEnabled(false);
-                GUI.JListModel.clear();
-                GUI.JListModel.addElement(notFound);
+                String stem = "Stem of query '" + subqueries[1] + "' is '" + stems.get(0) + "'";
+                
+                GUI.ResultsLabel.setText(stem); 
                 
                 return true; 
             }
             
-            
         }
-        else if(subqueries[0].equals("index"))
+        else if (subqueries[0].equals("vocab"))
         {
+            List<String> vocabList = index.getVocabulary(); 
+           // System.out.println("vocab list printed: " + vocabList);
+            GUI.JListModel.clear();
+            GUI.ResultsLabel.setText("");
             
+            int vocabCount =0; 
+            for(String v : vocabList)
+            {
+                if (vocabCount<1000)
+                {
+                    vocabCount++;
+                    GUI.JListModel.addElement(v);
+                }
+            }
+            GUI.ResultsLabel.setText("Total size of vocabulary: " + vocabCount);
+            return true;
         }
-            
         
-        
-        
-        
-        
+       
+        return false; 
+    }
+    
+    protected static Boolean newCorpus() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        String[] subqueries = query.split("\\s+"); //split around white space
+        if(subqueries[0].equals("index") && subqueries.length > 1)
+        {
+            //System.out.println("new directory to index: " + subqueries[1]);
+            //System.out.println("new abs path to directory to index: " + Paths.get(subqueries[1]).toAbsolutePath());
+            JOptionPane.showOptionDialog(GUI.indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
+            startIndexing(Paths.get(subqueries[1]));
+            GUI.SearchBarTextField.setText("Enter a new search or 'q' to exit");
+            //GUI.ResultsLabel.setText("Search Results");
+            GUI.JListModel.clear();
+            return true; 
+        }
         return false; 
     }
     

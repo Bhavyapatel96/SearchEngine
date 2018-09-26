@@ -21,7 +21,7 @@ public class NewTokenProcessor implements TokenProcessor {
             
             
             String temp = token.replaceAll("^[^a-zA-Z0-9\\s]+|[^a-zA-Z0-9\\s]+$", ""); //removes nonalphanumeric chars from beginning and end
-            temp = temp.replaceAll("\'", "").replaceAll("\"", "");  //removes all apostropes and quotations
+            temp = temp.replaceAll("\'+", "").replaceAll("\"+", "");  //removes all apostropes and quotations
             
             String modifiedString = temp; //copy of string to split 
 

@@ -30,11 +30,7 @@ public class PhraseLiteral implements QueryComponent {
 	 */
 	public PhraseLiteral(String terms) {
 		mTerms.addAll(Arrays.asList(terms.split(" ")));
-                System.out.println("term before split: " + terms );
-                for(String term : mTerms)
-                {
-                    System.out.println("term after split: " + term );
-                }
+                
                 
 	}
 	

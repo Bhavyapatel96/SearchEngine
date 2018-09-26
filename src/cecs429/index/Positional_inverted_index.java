@@ -6,12 +6,11 @@
 package cecs429.index;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import static jdk.nashorn.internal.objects.NativeArray.map;
+import java.util.Set;
 
 /**
  *
@@ -19,13 +18,13 @@ import static jdk.nashorn.internal.objects.NativeArray.map;
  */
 public class Positional_inverted_index implements Index{
     HashMap<String, List<Posting>> mInvertedIndex;
-    private List<String> mVocabulary;
+    
   
     
     public Positional_inverted_index() 
     {
         mInvertedIndex = new HashMap<String, List<Posting>>();
-        mVocabulary = new ArrayList<String>();
+        
         
     }
     
@@ -91,13 +90,30 @@ public class Positional_inverted_index implements Index{
         
         public List<String> getVocabulary() {
             
-            Collections.sort(mVocabulary);
-		return Collections.unmodifiableList(mVocabulary);
+            Set<String> keys = mInvertedIndex.keySet();
+            List<String> vocab = new ArrayList<String>(keys); 
+            
+            Collections.sort(vocab);
+             
+            return vocab; 
 	}
 
-    
+  
 
-   
+   public void print()
+    {
+
+        for (String key : mInvertedIndex.keySet()) 
+        {
+            System.out.print("term in vocab: " + key);
+
+            
+            System.out.println(); 
+
+
+        }
+
+    }
 
         
         
