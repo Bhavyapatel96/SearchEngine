@@ -19,9 +19,9 @@ import cecs429.text.TokenProcessor;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -46,12 +46,15 @@ public class DocumentIndexer {
    {
        corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
        long startTime = System.nanoTime(); 
+       
+       System.out.println("indexing directory: " + path); 
+       
        index = posindexCorpus(corpus);
        long endTime = System.nanoTime(); 
        
        long elapsedTime = (endTime - startTime);
        double seconds = (double)elapsedTime / 1000000000.0;
-       GUI.ResultsLabel.setText("Total Indexing Time: " + seconds + " seconds");
+       GUI.ResultsLabel.setText("Total Indexing Time: " + new DecimalFormat("##.##").format(seconds) + " seconds");
         
        
    }
@@ -209,13 +212,13 @@ public class DocumentIndexer {
         String[] subqueries = query.split("\\s+"); //split around white space
         if(subqueries[0].equals("index") && subqueries.length > 1)
         {
-            //System.out.println("new directory to index: " + subqueries[1]);
-            //System.out.println("new abs path to directory to index: " + Paths.get(subqueries[1]).toAbsolutePath());
             JOptionPane.showOptionDialog(GUI.indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
+            GUI.JListModel.clear();
+            GUI.ResultsLabel.setText("Indexing");
             startIndexing(Paths.get(subqueries[1]));
             GUI.SearchBarTextField.setText("Enter a new search or 'q' to exit");
-            //GUI.ResultsLabel.setText("Search Results");
-            GUI.JListModel.clear();
+            
+            
             return true; 
         }
         return false; 
@@ -270,17 +273,14 @@ public class DocumentIndexer {
            
     }
 
-   
-//        BooleanQueryParser temp = new BooleanQueryParser(); 
-//        temp.parseQuery("-hello");
-//        temp.parseQuery("\"hello\"");
-//
-//        System.out.println("");
-
+  
+    
+    NewTokenProcessor processor = new NewTokenProcessor(); 
+    processor.processToken(""); 
 
 
     
     }
-*/
+ */
 }
 

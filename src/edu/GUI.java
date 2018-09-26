@@ -127,10 +127,11 @@ public class GUI extends javax.swing.JFrame {
         docBodyScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         docBodyScrollPane.setMaximumSize(new java.awt.Dimension(32767, 30));
         docBodyScrollPane.setMinimumSize(new java.awt.Dimension(450, 30));
+        docBodyScrollPane.setPreferredSize(new java.awt.Dimension(469, 5000));
 
         docBodyLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         docBodyLabel.setMinimumSize(new java.awt.Dimension(450, 2000));
-        docBodyLabel.setPreferredSize(new java.awt.Dimension(450, 10000));
+        docBodyLabel.setPreferredSize(new java.awt.Dimension(450, 5000));
         docBodyScrollPane.setViewportView(docBodyLabel);
 
         docTitleScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -140,9 +141,9 @@ public class GUI extends javax.swing.JFrame {
 
         docTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         docTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        docTitleLabel.setMaximumSize(new java.awt.Dimension(1000, 30));
+        docTitleLabel.setMaximumSize(new java.awt.Dimension(700, 30));
         docTitleLabel.setMinimumSize(new java.awt.Dimension(450, 30));
-        docTitleLabel.setPreferredSize(new java.awt.Dimension(1000, 30));
+        docTitleLabel.setPreferredSize(new java.awt.Dimension(700, 30));
         docTitleScrollPane.setViewportView(docTitleLabel);
 
         javax.swing.GroupLayout docFrameLayout = new javax.swing.GroupLayout(docFrame.getContentPane());
@@ -171,7 +172,7 @@ public class GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(637, 469));
 
-        ProjectTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        ProjectTitleLabel.setFont(new java.awt.Font("Gujarati Sangam MN", 0, 24)); // NOI18N
         ProjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ProjectTitleLabel.setText("Positional Inverted Search Engine");
         ProjectTitleLabel.setMaximumSize(new java.awt.Dimension(147, 28));
@@ -374,7 +375,7 @@ public class GUI extends javax.swing.JFrame {
         //</editor-fold>
     
         /* Create and display the form */
-      java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GUI().setVisible(false);
                 

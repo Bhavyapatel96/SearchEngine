@@ -20,39 +20,31 @@ public class OrQuery implements QueryComponent {
         mComponents = components;
     }
 
-      @Override
+    @Override
     public List<Posting> getPostings(Index index) {
         List<Posting> results = new ArrayList<>();
         //List<Positional_posting> result = new ArrayList<>();
         List<Posting> p0 = new ArrayList<>();
         List<Posting> p1 = new ArrayList<>();
-        
-        
+
         //how many times we want to perform merge.
         int count = mComponents.size() - 1;
 
-        TermLiteral t0 = new TermLiteral(mComponents.get(0).toString());
-        TermLiteral t1 = new TermLiteral(mComponents.get(1).toString());
-        //List<Integer> p0 = new ArrayList<>();
-        //List<Integer> p1 = new ArrayList<>();
+        p0 = mComponents.get(0).getPostings(index);
+        p1 = mComponents.get(1).getPostings(index);
 
-      
-        
-        p0=t0.getPostings(index);
-        p1=t1.getPostings(index);
-        
-        
-        results = merge(p0,p1);
+        results = merge(p0, p1);
         count = count - 1;
         int k = 2;
 
         while (count > 0) {
-            TermLiteral t = new TermLiteral(mComponents.get(k).toString());
-           
+
+            //mComponents.get(k).getPositional_posting(index);
             List<Posting> p2 = new ArrayList<>();
-            p2=t.getPostings(index);
-           
-            results = merge(results,p2);
+
+            p2 = mComponents.get(k).getPostings(index);
+
+            results = merge(results, p2);
             count = count - 1;
             k = k + 1;
 
@@ -68,68 +60,76 @@ public class OrQuery implements QueryComponent {
         List<Posting> result = new ArrayList<>();
         List<Integer> p0 = new ArrayList<>();
         List<Integer> p1 = new ArrayList<>();
-        for(Posting a1:a){
-        
+        for (Posting a1 : a) {
+
             p0.add(a1.getDocumentId());
         }
-        for(Posting b1:b){
-        
+        for (Posting b1 : b) {
+
             p1.add(b1.getDocumentId());
         }
-        
+
         int m = p0.size();
         int n = p1.size();
         int i = 0;
         int j = 0;
         while (i < m || j < n) {
-            if (p0.get(i) == p1.get(j)) {
-                result.add(b.get(j));
-                i++;
-                j++;
-                if(i==m){
-                    while(j<n){
+            if (m == 0) {
+                while (j < n) {
                     result.add(b.get(j));
                     j++;
-                    }
                 }
-                else if(j==n){
-                    while(i<m){
+            } else if (n == 0) {
+                while (i < m) {
                     result.add(a.get(i));
                     i++;
-                    }
-                }
-            } else if (p0.get(i) < p1.get(j)) {
-                result.add(a.get(i));
-                i++;
-                if(i==m){
-                    while(j<n){
-                    result.add(b.get(j));
-                    j++;
-                    }
                 }
             } else {
-                result.add(b.get(j));
-                j++;
-                if(j==n){
-                    while(i<m){
+                if (p0.get(i) == p1.get(j)) {
+                    result.add(b.get(j));
+                    i++;
+                    j++;
+                    if (i == m) {
+                        while (j < n) {
+                            result.add(b.get(j));
+                            j++;
+                        }
+                    } else if (j == n) {
+                        while (i < m) {
+                            result.add(a.get(i));
+                            i++;
+                        }
+                    }
+                } else if (p0.get(i) < p1.get(j)) {
                     result.add(a.get(i));
                     i++;
+                    if (i == m) {
+                        while (j < n) {
+                            result.add(b.get(j));
+                            j++;
+                        }
+                    }
+                } else {
+                    result.add(b.get(j));
+                    j++;
+                    if (j == n) {
+                        while (i < m) {
+                            result.add(a.get(i));
+                            i++;
+                        }
                     }
                 }
             }
-
         }
 
         return result;
     }
 
-            @Override
-            public String toString
-            
-                () {
-		// Returns a string of the form "[SUBQUERY] + [SUBQUERY] + [SUBQUERY]"
-		return "("
-                        + String.join(" + ", mComponents.stream().map(c -> c.toString()).collect(Collectors.toList()))
-                        + " )";
-            }
-        }
+    @Override
+    public String toString() {
+        // Returns a string of the form "[SUBQUERY] + [SUBQUERY] + [SUBQUERY]"
+        return "("
+                + String.join(" + ", mComponents.stream().map(c -> c.toString()).collect(Collectors.toList()))
+                + " )";
+    }
+}

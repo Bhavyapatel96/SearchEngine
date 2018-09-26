@@ -38,27 +38,19 @@ public class AndQuery implements QueryComponent {
         //how many times we want to perform merge.
         int count = mComponents.size() - 1;
 
-        TermLiteral t0 = new TermLiteral(mComponents.get(0).toString());
-        TermLiteral t1 = new TermLiteral(mComponents.get(1).toString());
-        //List<Integer> p0 = new ArrayList<>();
-        //List<Integer> p1 = new ArrayList<>();
-
-      
         
-        p0=t0.getPostings(index);
-        p1=t1.getPostings(index);
-        
+        p0=mComponents.get(0).getPostings(index);
+        p1=mComponents.get(1).getPostings(index);
         
         results = merge(p0,p1);
         count = count - 1;
         int k = 2;
 
         while (count > 0) {
-            TermLiteral t = new TermLiteral(mComponents.get(k).toString());
-           
+            
             List<Posting> p2 = new ArrayList<>();
-            p2=t.getPostings(index);
-           
+            p2=mComponents.get(k).getPostings(index);
+            
             results = merge(results,p2);
             count = count - 1;
             k = k + 1;

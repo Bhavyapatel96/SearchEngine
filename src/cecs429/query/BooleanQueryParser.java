@@ -165,12 +165,16 @@ public class BooleanQueryParser {
                     
                     //System.out.println("position of '\"' in " + subStr + " is " + posOfQuote);
                     
-                    //System.out.println("found a phrase literal: " + subquery.substring(startIndex, startIndex + posOfQuote +2 ));
+                    //System.out.println("found a phrase literal: " + subquery.substring(startIndex+1, startIndex + posOfQuote +1 ));
                     
                     return new Literal(
                     new StringBounds(startIndex, posOfQuote),
-                    new PhraseLiteral(subquery.substring(startIndex, startIndex + posOfQuote +2)));
+                    new PhraseLiteral(subquery.substring(startIndex+ 1, startIndex + posOfQuote +1)));
                 }
+//                else if(subquery.charAt(startIndex) == '-') //NOT QUERY
+//                {
+//                    
+//                }
                 else
                 {
                     // Locate the next space to find the end of this literal.

@@ -59,15 +59,15 @@ public class NewTokenProcessor implements TokenProcessor {
              * for testing purposes.
              */
             
-            /*
             
+            /*
             List<String> test = new ArrayList<String>();
-            test.add("-#Hello8()-"); 
-            test.add("'this--is\"\"a.test\"");
+            test.add("-#$%Hello8()-"); 
+            test.add("'$this--is\"\"a.test\"");
             test.add("^hypenation-test-past,"); 
-            test.add("192.168.1.1");
-            test.add("consolidating"); //stemmer should give consolid
-            test.add("knocking"); //stemmer should give knock
+            test.add("%192.168.1.1");
+            test.add("*!@#$%^&*()consolidating!))(*!^*!"); //stemmer should give consolid
+            test.add(":\"{}\\+knocking"); //stemmer should give knock
             
             List<String> terms = new ArrayList<String>(); 
             
