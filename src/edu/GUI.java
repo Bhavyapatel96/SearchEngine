@@ -5,22 +5,20 @@
  */
 package edu;
 
-import cecs429.documents.JsonFileDocument;
-import cecs429.index.Posting;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import static edu.DocumentIndexer.corpus;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -36,12 +34,16 @@ public class GUI extends javax.swing.JFrame {
     private int xCoord = dim.width/2; 
     private int yCoord = dim.height/2;
     String indexingMsg = "Indexing Corpus";
-    protected static DefaultListModel JListModel = new DefaultListModel();; 
+    protected static DefaultListModel JListModel = new DefaultListModel();
+    private String iconPath = getClass().getResource("/resources/pose.png").toString(); 
+    private static ImageIcon icon = new ImageIcon( new ImageIcon(GUI.class.getResource("/resources/PoSE.png")).getImage().getScaledInstance(170, 58, Image.SCALE_DEFAULT));
+    
 
     /**
      * Creates new form GUI
      */
-    public GUI() {
+    public GUI()
+    {
         
         initComponents();
         this.setLocation(xCoord-this.getSize().width/2,yCoord-this.getSize().height/2);
@@ -58,26 +60,42 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         DirectoryDialogBox = new javax.swing.JDialog();
+        DirectoryDialogPanel = new javax.swing.JPanel();
         SearchDirectoriesButton = new javax.swing.JButton();
         DirectoryDirectionsLabel = new javax.swing.JLabel();
+        directoryPoseLabel = new javax.swing.JLabel();
         indexingCorpusMessage = new javax.swing.JOptionPane();
         directoryChooser = new javax.swing.JFileChooser();
         docFrame = new javax.swing.JFrame();
+        docFramePanel = new javax.swing.JPanel();
         docBodyScrollPane = new javax.swing.JScrollPane();
         docBodyLabel = new javax.swing.JLabel();
-        docTitleScrollPane = new javax.swing.JScrollPane();
-        docTitleLabel = new javax.swing.JLabel();
+        docFootNotesPanel = new javax.swing.JPanel();
+        docFootNoteLabel = new javax.swing.JLabel();
+        topPanel = new javax.swing.JPanel();
         ProjectTitleLabel = new javax.swing.JLabel();
         SearchBarTextField = new javax.swing.JTextField();
+        bottomPanel = new javax.swing.JPanel();
         ResultsScrollPane = new javax.swing.JScrollPane();
         //JListModel.addElement("Search Results");
         ResultsJList = new javax.swing.JList<>(JListModel);
+        ResultsScrollPane1 = new javax.swing.JScrollPane();
+        //JListModel.addElement("Search Results");
+        ResultsJList1 = new javax.swing.JList<>(JListModel);
         ResultsLabel = new javax.swing.JLabel();
+        FrameFootnotes = new javax.swing.JPanel();
+        footnoteLabel = new javax.swing.JLabel();
 
         DirectoryDialogBox.setTitle("Select Directory");
-        DirectoryDialogBox.setSize(new java.awt.Dimension(400, 246));
+        DirectoryDialogBox.setMinimumSize(new java.awt.Dimension(360, 208));
+        DirectoryDialogBox.setSize(new java.awt.Dimension(360, 208));
+
+        DirectoryDialogPanel.setBackground(new java.awt.Color(255, 255, 255));
+        DirectoryDialogPanel.setMaximumSize(new java.awt.Dimension(360, 208));
+        DirectoryDialogPanel.setSize(new java.awt.Dimension(360, 208));
 
         SearchDirectoriesButton.setBackground(new java.awt.Color(0, 102, 204));
+        SearchDirectoriesButton.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         SearchDirectoriesButton.setText("Directories");
         SearchDirectoriesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,8 +103,39 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        DirectoryDirectionsLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        DirectoryDirectionsLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        DirectoryDirectionsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         DirectoryDirectionsLabel.setText("Please select a directory to index. ");
+
+        directoryPoseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        directoryPoseLabel.setIcon(icon);
+
+        javax.swing.GroupLayout DirectoryDialogPanelLayout = new javax.swing.GroupLayout(DirectoryDialogPanel);
+        DirectoryDialogPanel.setLayout(DirectoryDialogPanelLayout);
+        DirectoryDialogPanelLayout.setHorizontalGroup(
+            DirectoryDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(DirectoryDialogPanelLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addGroup(DirectoryDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DirectoryDialogPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SearchDirectoriesButton)
+                        .addGap(67, 67, 67))
+                    .addComponent(DirectoryDirectionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(directoryPoseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
+        );
+        DirectoryDialogPanelLayout.setVerticalGroup(
+            DirectoryDialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(DirectoryDialogPanelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(directoryPoseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(DirectoryDirectionsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(SearchDirectoriesButton)
+                .addGap(30, 30, 30))
+        );
 
         DirectoryDialogBox.setLocation(xCoord-DirectoryDialogBox.getSize().width/2, yCoord-DirectoryDialogBox.getSize().height/2);
         DirectoryDialogBox.setVisible(true);
@@ -95,93 +144,126 @@ public class GUI extends javax.swing.JFrame {
         DirectoryDialogBox.getContentPane().setLayout(DirectoryDialogBoxLayout);
         DirectoryDialogBoxLayout.setHorizontalGroup(
             DirectoryDialogBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DirectoryDialogBoxLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(SearchDirectoriesButton)
-                .addGap(147, 147, 147))
             .addGroup(DirectoryDialogBoxLayout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(DirectoryDirectionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(DirectoryDialogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         DirectoryDialogBoxLayout.setVerticalGroup(
             DirectoryDialogBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DirectoryDialogBoxLayout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(DirectoryDirectionsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                .addComponent(SearchDirectoriesButton)
-                .addGap(78, 78, 78))
+            .addGroup(DirectoryDialogBoxLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(DirectoryDialogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         indexingCorpusMessage.setVisible(false);
+        indexingCorpusMessage.setBackground(new java.awt.Color(255, 255, 255));
+        indexingCorpusMessage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         indexingCorpusMessage.setLocation(xCoord-indexingCorpusMessage.getSize().width/2, yCoord-indexingCorpusMessage.getSize().height/2);
+        indexingCorpusMessage.setOpaque(false);
 
         docFrame.setVisible(false);
-        docFrame.setMaximumSize(new java.awt.Dimension(550, 528));
-        docFrame.setMinimumSize(new java.awt.Dimension(550, 528));
-        docFrame.setSize(new java.awt.Dimension(550, 528));
+        docFrame.setTitle("Document");
+        docFrame.setBackground(new java.awt.Color(255, 255, 255));
+        docFrame.setMaximumSize(new java.awt.Dimension(480, 555));
+        docFrame.setMinimumSize(new java.awt.Dimension(480, 555));
+        docFrame.setPreferredSize(new java.awt.Dimension(480, 555));
+        docFrame.setSize(new java.awt.Dimension(480, 555));
         docFrame.setLocation(xCoord-docFrame.getSize().width/2, yCoord-docFrame.getSize().height/2);
 
-        docBodyScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        docFramePanel.setBackground(new java.awt.Color(255, 255, 255));
+        docFramePanel.setMaximumSize(new java.awt.Dimension(480, 542));
+        docFramePanel.setMinimumSize(new java.awt.Dimension(480, 542));
+
         docBodyScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         docBodyScrollPane.setMaximumSize(new java.awt.Dimension(32767, 30));
         docBodyScrollPane.setMinimumSize(new java.awt.Dimension(450, 30));
         docBodyScrollPane.setPreferredSize(new java.awt.Dimension(469, 5000));
 
+        docBodyLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        docBodyLabel.setToolTipText("Document Chosen");
         docBodyLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        docBodyLabel.setMinimumSize(new java.awt.Dimension(450, 2000));
-        docBodyLabel.setPreferredSize(new java.awt.Dimension(450, 5000));
+        docBodyLabel.setMaximumSize(new java.awt.Dimension(444, 2000));
+        docBodyLabel.setMinimumSize(new java.awt.Dimension(444, 2000));
+        docBodyLabel.setPreferredSize(new java.awt.Dimension(444, 2000));
+        docBodyLabel.setSize(new java.awt.Dimension(444, 2000));
         docBodyScrollPane.setViewportView(docBodyLabel);
 
-        docTitleScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        docTitleScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        docTitleScrollPane.setMinimumSize(new java.awt.Dimension(450, 28));
-        docTitleScrollPane.setPreferredSize(new java.awt.Dimension(450, 28));
+        javax.swing.GroupLayout docFramePanelLayout = new javax.swing.GroupLayout(docFramePanel);
+        docFramePanel.setLayout(docFramePanelLayout);
+        docFramePanelLayout.setHorizontalGroup(
+            docFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(docFramePanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+        );
+        docFramePanelLayout.setVerticalGroup(
+            docFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(docFramePanelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        docTitleLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
-        docTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        docTitleLabel.setMaximumSize(new java.awt.Dimension(700, 30));
-        docTitleLabel.setMinimumSize(new java.awt.Dimension(450, 30));
-        docTitleLabel.setPreferredSize(new java.awt.Dimension(700, 30));
-        docTitleScrollPane.setViewportView(docTitleLabel);
+        docFootNoteLabel.setForeground(new java.awt.Color(102, 102, 102));
+        docFootNoteLabel.setText("Bhavya Patel, Dayana Rios");
+
+        javax.swing.GroupLayout docFootNotesPanelLayout = new javax.swing.GroupLayout(docFootNotesPanel);
+        docFootNotesPanel.setLayout(docFootNotesPanelLayout);
+        docFootNotesPanelLayout.setHorizontalGroup(
+            docFootNotesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(docFootNotesPanelLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(docFootNoteLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        docFootNotesPanelLayout.setVerticalGroup(
+            docFootNotesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, docFootNotesPanelLayout.createSequentialGroup()
+                .addContainerGap(10, Short.MAX_VALUE)
+                .addComponent(docFootNoteLabel)
+                .addGap(15, 15, 15))
+        );
 
         javax.swing.GroupLayout docFrameLayout = new javax.swing.GroupLayout(docFrame.getContentPane());
         docFrame.getContentPane().setLayout(docFrameLayout);
         docFrameLayout.setHorizontalGroup(
             docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, docFrameLayout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
-                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
             .addGroup(docFrameLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(docTitleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(docFramePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(docFootNotesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         docFrameLayout.setVerticalGroup(
             docFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(docFrameLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(docTitleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(docBodyScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(docFramePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(docFootNotesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Postional Inverted Index Search Engine");
+        setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(637, 469));
 
-        ProjectTitleLabel.setFont(new java.awt.Font("Gujarati Sangam MN", 0, 24)); // NOI18N
-        ProjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ProjectTitleLabel.setText("Positional Inverted Search Engine");
-        ProjectTitleLabel.setMaximumSize(new java.awt.Dimension(147, 28));
-        ProjectTitleLabel.setMinimumSize(new java.awt.Dimension(147, 24));
-        ProjectTitleLabel.setPreferredSize(new java.awt.Dimension(147, 28));
-        ProjectTitleLabel.setRequestFocusEnabled(false);
-        ProjectTitleLabel.setSize(new java.awt.Dimension(147, 28));
+        topPanel.setBackground(new java.awt.Color(246, 246, 246));
 
-        SearchBarTextField.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        ProjectTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ProjectTitleLabel.setIcon(icon);
+        ProjectTitleLabel.setMaximumSize(new java.awt.Dimension(170, 58));
+        ProjectTitleLabel.setMinimumSize(new java.awt.Dimension(170, 58));
+        ProjectTitleLabel.setPreferredSize(new java.awt.Dimension(170, 58));
+        ProjectTitleLabel.setRequestFocusEnabled(false);
+        ProjectTitleLabel.setSize(new java.awt.Dimension(170, 58));
+        //ProjectTitleLabel = new javax.swing.JLabel(icon);
+
+        SearchBarTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         SearchBarTextField.setText("Enter a term to search");
         SearchBarTextField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SearchBarTextField.setMaximumSize(new java.awt.Dimension(147, 22));
@@ -193,7 +275,31 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
+        topPanel.setLayout(topPanelLayout);
+        topPanelLayout.setHorizontalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addGap(86, 86, 86)
+                .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
+        );
+        topPanelLayout.setVerticalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        bottomPanel.setBackground(new java.awt.Color(255, 255, 255));
+
         ResultsJList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ResultsJList.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         ResultsJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         ResultsJList.setToolTipText("Displays results of search query");
         ResultsJList.setMaximumSize(new java.awt.Dimension(147, 32767));
@@ -207,37 +313,93 @@ public class GUI extends javax.swing.JFrame {
         });
         ResultsScrollPane.setViewportView(ResultsJList);
 
+        ResultsJList1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ResultsJList1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        ResultsJList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        ResultsJList1.setToolTipText("Displays results of search query");
+        ResultsJList1.setMaximumSize(new java.awt.Dimension(147, 32767));
+        ResultsJList1.setMinimumSize(new java.awt.Dimension(147, 206));
+        ResultsJList1.setPreferredSize(new java.awt.Dimension(147, 32767));
+        ResultsJList1.setSize(new java.awt.Dimension(147, 32767));
+        ResultsJList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ResultsJListMouseClicked(evt);
+            }
+        });
+        ResultsScrollPane1.setViewportView(ResultsJList1);
+
         ResultsLabel.setBackground(new java.awt.Color(255, 255, 255));
-        ResultsLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        ResultsLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         ResultsLabel.setText("Search Results");
-        ResultsLabel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ResultsLabel.setOpaque(true);
+
+        javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
+        bottomPanel.setLayout(bottomPanelLayout);
+        bottomPanelLayout.setHorizontalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addGap(86, 86, 86)
+                .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(86, 86, 86))
+        );
+        bottomPanelLayout.setVerticalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(ResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        FrameFootnotes.setBackground(new java.awt.Color(246, 246, 246));
+
+        footnoteLabel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        footnoteLabel.setForeground(new java.awt.Color(102, 102, 102));
+        footnoteLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        footnoteLabel.setText("Bhavya Patel, Dayana Rios");
+        footnoteLabel.setToolTipText("");
+
+        javax.swing.GroupLayout FrameFootnotesLayout = new javax.swing.GroupLayout(FrameFootnotes);
+        FrameFootnotes.setLayout(FrameFootnotesLayout);
+        FrameFootnotesLayout.setHorizontalGroup(
+            FrameFootnotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FrameFootnotesLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(footnoteLabel)
+                .addContainerGap(676, Short.MAX_VALUE))
+        );
+        FrameFootnotesLayout.setVerticalGroup(
+            FrameFootnotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FrameFootnotesLayout.createSequentialGroup()
+                .addContainerGap(10, Short.MAX_VALUE)
+                .addComponent(footnoteLabel)
+                .addGap(10, 10, 10))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ResultsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
-                    .addComponent(SearchBarTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
-                    .addComponent(ResultsScrollPane))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(FrameFootnotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(ResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(FrameFootnotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -312,17 +474,17 @@ public class GUI extends javax.swing.JFrame {
 
                 try {
 
-                    docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
+                    //docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
                     BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());
                     //Reader reader = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent();
-
+                    String title = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle(); 
                     //read the contents of the json file to display them
-                    String contents = "<html>";
+                    String contents = "<html><h1>" + title + "</h1><body>";
                     String line;
                     while ((line = reader.readLine()) != null) {
                         contents += line;
                     }
-                    contents += "</html>";
+                    contents += "</body></html>";
 
                     docBodyLabel.setText(contents);
                 } catch (ArrayIndexOutOfBoundsException ex) {
@@ -340,6 +502,28 @@ public class GUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_ResultsJListMouseClicked
 
+    
+    
+    public class ImgUtils {
+
+        public BufferedImage scaleImage(int WIDTH, int HEIGHT, String filename) {
+            BufferedImage bi = null;
+            try {
+                ImageIcon ii = new ImageIcon(filename);//path to image
+                bi = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2d = (Graphics2D) bi.createGraphics();
+                g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+                g2d.drawImage(ii.getImage(), 0, 0, WIDTH, HEIGHT, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return bi;
+        }
+
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -387,19 +571,28 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JDialog DirectoryDialogBox;
+    private javax.swing.JPanel DirectoryDialogPanel;
     private javax.swing.JLabel DirectoryDirectionsLabel;
+    private javax.swing.JPanel FrameFootnotes;
     private javax.swing.JLabel ProjectTitleLabel;
     protected static javax.swing.JList<String> ResultsJList;
+    protected static javax.swing.JList<String> ResultsJList1;
     protected static javax.swing.JLabel ResultsLabel;
     private javax.swing.JScrollPane ResultsScrollPane;
+    private javax.swing.JScrollPane ResultsScrollPane1;
     protected static javax.swing.JTextField SearchBarTextField;
     private javax.swing.JButton SearchDirectoriesButton;
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JFileChooser directoryChooser;
+    private javax.swing.JLabel directoryPoseLabel;
     private javax.swing.JLabel docBodyLabel;
     private javax.swing.JScrollPane docBodyScrollPane;
+    private javax.swing.JLabel docFootNoteLabel;
+    private javax.swing.JPanel docFootNotesPanel;
     private javax.swing.JFrame docFrame;
-    protected static javax.swing.JLabel docTitleLabel;
-    private javax.swing.JScrollPane docTitleScrollPane;
+    private javax.swing.JPanel docFramePanel;
+    private javax.swing.JLabel footnoteLabel;
     protected static javax.swing.JOptionPane indexingCorpusMessage;
+    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }
