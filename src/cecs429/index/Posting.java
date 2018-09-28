@@ -31,7 +31,7 @@ public class Posting {
 
     }
 
-    public List getPositions(){
+    public List<Integer> getPositions(){
     //System.out.print(mDocumentId);
     return h;
     }

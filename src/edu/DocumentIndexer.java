@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -45,10 +46,8 @@ public class DocumentIndexer {
     protected static void startIndexing(Path path) throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
        corpus = DirectoryCorpus.loadJsonTextDirectory(path.toAbsolutePath(), ".json");
+       
        long startTime = System.nanoTime(); 
-       
-       System.out.println("indexing directory: " + path); 
-       
        index = posindexCorpus(corpus);
        long endTime = System.nanoTime(); 
        
@@ -101,7 +100,7 @@ public class DocumentIndexer {
 
         }
         
-        GUI.SearchBarTextField.setText("Enter a new search or 'q' to exit");
+        //GUI.SearchBarTextField.setText("Enter a new search or 'q' to exit");
         GUI.SearchBarTextField.selectAll();
         
 
@@ -165,7 +164,7 @@ public class DocumentIndexer {
         
         String[] subqueries = query.split("\\s+"); //split around white space
         
-        if(subqueries[0].equals("stem")) //first term in suqueries tells computer what to do 
+        if(subqueries[0].equals("stem")) //first term in subqueries tells computer what to do 
         {
             GUI.JListModel.clear();
             GUI.ResultsLabel.setText("");
@@ -233,10 +232,10 @@ public class DocumentIndexer {
      * 
      */
     
-  /*
+/*
        public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 
-        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("").toAbsolutePath(), ".json"); //to run json files
+        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("/Users/dayanarios/Desktop/10jsonfiles").toAbsolutePath(), ".json"); //to run json files
         //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");// To run .txt files
         Positional_inverted_index index = posindexCorpus(corpus);
         List<Posting> result = new ArrayList<>();
@@ -274,12 +273,44 @@ public class DocumentIndexer {
     }
 
   
-    
-    NewTokenProcessor processor = new NewTokenProcessor(); 
-    processor.processToken(""); 
 
-
-    
+        List<String> terms = new ArrayList(); 
+        terms.add("national");
+        terms.add("historical");
+        terms.add("park");
+        terms.add("hike");
+        
+        List<Posting> p1 = new ArrayList(); 
+        Posting post1 = new Posting(11, 1); 
+        p1.add(post1);
+        
+            
+            
+            
+            List<Posting> p2 = new ArrayList(); 
+            Posting post2 = new Posting(11, 1); 
+        p2.add(post2);
+           
+            List<Integer> positions1 = post1.getPositions(); 
+            
+            positions1.add(4);
+            positions1.add(6); 
+            positions1.add(7); 
+            positions1.add(13); 
+            
+            List<Integer> positions2 = post2.getPositions();
+            positions2.add(3); 
+            positions2.add(6);
+            positions2.add(9);
+            positions2.add(11);
+            positions2.add(12); 
+            
+        PhraseLiteral pliteral = new PhraseLiteral(terms); 
+        //pliteral.getPostings(index);
+        //System.out.println("p1 posting: " + p1.get(0).getDocumentId() + " positions: " + positions1);
+        //System.out.println("p2 posting: " + p2.get(0).getDocumentId() + " positions: " + positions2); 
+        System.out.println(pliteral.isPhraseLiteral(p1, p2, p1.size(), p2.size()));
+        
     }
  */
 }

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 /**
  * An OrQuery composes other QueryComponents and merges their postings with a
  * union-type operation.
+ * @author bhavya
  */
 public class OrQuery implements QueryComponent {
     // The components of the Or query.

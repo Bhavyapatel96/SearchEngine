@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  *
- * @author dayanarios
+ * @author bhavya
  */
 public class Positional_inverted_index implements Index{
     HashMap<String, List<Posting>> mInvertedIndex;

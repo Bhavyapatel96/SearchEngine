@@ -28,7 +28,6 @@ import javax.swing.JOptionPane;
  * @author dayanarios
  */
 public class GUI extends javax.swing.JFrame {
-    private JFrame frame; 
     private static Path directoryPath; 
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     private int xCoord = dim.width/2; 
@@ -166,9 +165,7 @@ public class GUI extends javax.swing.JFrame {
         docFrame.setVisible(false);
         docFrame.setTitle("Document");
         docFrame.setBackground(new java.awt.Color(255, 255, 255));
-        docFrame.setMaximumSize(new java.awt.Dimension(480, 555));
         docFrame.setMinimumSize(new java.awt.Dimension(480, 555));
-        docFrame.setPreferredSize(new java.awt.Dimension(480, 555));
         docFrame.setSize(new java.awt.Dimension(480, 555));
         docFrame.setLocation(xCoord-docFrame.getSize().width/2, yCoord-docFrame.getSize().height/2);
 
@@ -248,9 +245,8 @@ public class GUI extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Postional Inverted Index Search Engine");
+        setTitle("Po(stional Inverted Index) Search Engine");
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(637, 469));
 
         topPanel.setBackground(new java.awt.Color(246, 246, 246));
 
@@ -264,7 +260,8 @@ public class GUI extends javax.swing.JFrame {
         //ProjectTitleLabel = new javax.swing.JLabel(icon);
 
         SearchBarTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        SearchBarTextField.setText("Enter a term to search");
+        SearchBarTextField.setText("Enter a term to search or 'q' to exit");
+        SearchBarTextField.setToolTipText("Search Bar");
         SearchBarTextField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SearchBarTextField.setMaximumSize(new java.awt.Dimension(147, 22));
         SearchBarTextField.setMinimumSize(new java.awt.Dimension(147, 22));
@@ -429,8 +426,7 @@ public class GUI extends javax.swing.JFrame {
             } catch (Exception ex) {
                 System.out.println("Problem with DocumentIndexer.startIndexing(directoryPath)"); 
             }
-            
-          
+
         }
         else 
         {
@@ -474,9 +470,9 @@ public class GUI extends javax.swing.JFrame {
 
                 try {
 
-                    //docTitleLabel.setText(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle()); //gets Document relating to docID
+                    
                     BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());
-                    //Reader reader = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent();
+                    
                     String title = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle(); 
                     //read the contents of the json file to display them
                     String contents = "<html><h1>" + title + "</h1><body>";
@@ -493,8 +489,6 @@ public class GUI extends javax.swing.JFrame {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                
-                
             }
         }
         
@@ -503,54 +497,12 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ResultsJListMouseClicked
 
     
-    
-    public class ImgUtils {
-
-        public BufferedImage scaleImage(int WIDTH, int HEIGHT, String filename) {
-            BufferedImage bi = null;
-            try {
-                ImageIcon ii = new ImageIcon(filename);//path to image
-                bi = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-                Graphics2D g2d = (Graphics2D) bi.createGraphics();
-                g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-                g2d.drawImage(ii.getImage(), 0, 0, WIDTH, HEIGHT, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-            return bi;
-        }
-
-    }
-    
-    
     /**
      * @param args the command line arguments
      */
     
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-
+       
         try{
 
         javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
@@ -565,8 +517,7 @@ public class GUI extends javax.swing.JFrame {
                 
             }
         });
-        
-        
+         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
