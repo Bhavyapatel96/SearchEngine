@@ -6,6 +6,9 @@
             <file>file:/Users/dayanarios/Desktop/SETProj/src/edu/DocumentIndexer.java</file>
             <file>file:/Users/dayanarios/Desktop/SETProj/src/edu/GUI.java</file>
             <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/documents/JsonFileDocument.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/query/BooleanQueryParser.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/query/NotQuery.java</file>
+            <file>file:/Users/dayanarios/Desktop/SETProj/src/cecs429/query/AndQuery.java</file>
         </group>
     </open-files>
 </project-private>

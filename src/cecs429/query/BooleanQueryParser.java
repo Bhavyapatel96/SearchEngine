@@ -172,10 +172,21 @@ public class BooleanQueryParser {
                     new StringBounds(startIndex, posOfQuote+2),
                     new PhraseLiteral(subquery.substring(startIndex, startIndex + posOfQuote+1)));
                 }
-//                else if(subquery.charAt(startIndex) == '-') //NOT QUERY
-//                {
-//                    
-//                }
+                else if(subquery.charAt(startIndex) == '-') //NOT QUERY
+                {
+                    int nextSpace = subquery.indexOf(' ', startIndex);
+                    if (nextSpace < 0) {
+                        // No more literals in this subquery.
+                        lengthOut = subLength - startIndex;
+                    } else {
+                        lengthOut = nextSpace - startIndex; //length of term
+                    }
+
+                    // This is a term literal containing a single term.
+                    return new Literal(
+                            new StringBounds(startIndex, lengthOut),
+                            new TermLiteral(subquery.substring(startIndex, startIndex + lengthOut)));
+                }
                 else
                 {
                     // Locate the next space to find the end of this literal.

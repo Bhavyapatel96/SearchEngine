@@ -29,33 +29,53 @@ public class AndQuery implements QueryComponent {
 
     @Override
     public List<Posting> getPostings(Index index) {
+
         List<Posting> results = new ArrayList<>();
-        //List<Positional_posting> result = new ArrayList<>();
+        List<QueryComponent> notcomponent = new ArrayList<>();
+//List<Positional_posting> result = new ArrayList<>();
         List<Posting> p0 = new ArrayList<>();
         List<Posting> p1 = new ArrayList<>();
-        
-        
+
         //how many times we want to perform merge.
         int count = mComponents.size() - 1;
+        String term1 = mComponents.get(0).toString();
+        String term2 = mComponents.get(1).toString();
 
-        
-        p0=mComponents.get(0).getPostings(index);
-        p1=mComponents.get(1).getPostings(index);
-        
-        results = merge(p0,p1);
-        count = count - 1;
-        int k = 2;
+        if (term1.charAt(0) == '-') {
+            //1st term is negative component
+            notcomponent.add(mComponents.get(0));
+            NotQuery notQuery = new NotQuery(notcomponent);
+            p0 = notQuery.getPostings(index);
+            p1 = mComponents.get(1).getPostings(index);
+            results = ANDNOTmerge(p1, p0);
+        } else if (term2.charAt(0) == '-') {
+            //2nd term is negative component
+            notcomponent.add(mComponents.get(1));
+            NotQuery notQuery = new NotQuery(notcomponent);
+            p1 = notQuery.getPostings(index);
+            p0 = mComponents.get(0).getPostings(index);
+            //positive term goes first
+            results = ANDNOTmerge(p0, p1);
+        } else {
+            //no negative component, perform simply AND
+            p0 = mComponents.get(0).getPostings(index);
+            p1 = mComponents.get(1).getPostings(index);
 
-        while (count > 0) {
-            
-            List<Posting> p2 = new ArrayList<>();
-            p2=mComponents.get(k).getPostings(index);
-            
-            results = merge(results,p2);
+            results = merge(p0, p1);
             count = count - 1;
-            k = k + 1;
+            int k = 2;
 
-            //System.out.println(results);
+            while (count > 0) {
+
+                List<Posting> p2 = new ArrayList<>();
+                p2 = mComponents.get(k).getPostings(index);
+
+                results = merge(results, p2);
+                count = count - 1;
+                k = k + 1;
+
+                //System.out.println(results);
+            }
         }
         mComponents.clear();
         // TODO: program the merge for an AndQuery, by gathering the postings of the composed QueryComponents and
@@ -67,15 +87,15 @@ public class AndQuery implements QueryComponent {
         List<Posting> result = new ArrayList<>();
         List<Integer> p0 = new ArrayList<>();
         List<Integer> p1 = new ArrayList<>();
-        for(Posting a1:a){
-        
+        for (Posting a1 : a) {
+
             p0.add(a1.getDocumentId());
         }
-        for(Posting b1:b){
-        
+        for (Posting b1 : b) {
+
             p1.add(b1.getDocumentId());
         }
-        
+
         int m = p0.size();
         int n = p1.size();
         int i = 0;
@@ -90,6 +110,55 @@ public class AndQuery implements QueryComponent {
                 i++;
             } else {
                 j++;
+            }
+
+        }
+
+        return result;
+    }
+
+    public List<Posting> ANDNOTmerge(List<Posting> a, List<Posting> b) {
+        List<Posting> result = new ArrayList<>();
+
+        //a contains the positive term while b contains negative term.
+        //we want those postings which contains a but not b.
+        List<Integer> p0 = new ArrayList<>();
+        List<Integer> p1 = new ArrayList<>();
+        for (Posting a1 : a) {
+
+            p0.add(a1.getDocumentId());
+        }
+        for (Posting b1 : b) {
+
+            p1.add(b1.getDocumentId());
+        }
+
+        int m = p0.size();
+        int n = p1.size();
+        int i = 0;
+        int j = 0;
+        while (i < m) {
+            if (p0.get(i) == p1.get(j)) {
+                i++;
+                j++;
+                if (j == n) {
+                    while (i < m) {
+                        result.add(a.get(i));
+                        i++;
+                    }
+                }
+            } else if (p0.get(i) < p1.get(j)) {
+                result.add(a.get(i));
+                i++;
+
+            } else {
+                j++;
+                if (j == n) {
+                    while (i < m) {
+                        result.add(a.get(i));
+                        i++;
+                    }
+                }
             }
 
         }
