@@ -133,4 +133,9 @@ public class OrQuery implements QueryComponent {
                 + String.join(" + ", mComponents.stream().map(c -> c.toString()).collect(Collectors.toList()))
                 + " )";
     }
+
+    @Override
+    public Boolean Component() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

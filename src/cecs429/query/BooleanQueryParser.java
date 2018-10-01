@@ -162,19 +162,28 @@ public class BooleanQueryParser {
                 {
                     String subStr = subquery.substring(startIndex+1);
                     int posOfQuote = subStr.indexOf('"', 0);
-                    //posOfQuote++; 
-                    
-                    //System.out.println("position of '\"' in " + subStr + " is " + posOfQuote);
-                    
-                    //System.out.println("found a phrase literal: " + subquery.substring(startIndex+1, startIndex + posOfQuote +1 ));
-                    
+                    //"explore"
+                    //
                     return new Literal(
+                            //(0,7+2)
                     new StringBounds(startIndex, posOfQuote+2),
+                            //(0,8)
                     new PhraseLiteral(subquery.substring(startIndex, startIndex + posOfQuote+1)));
                 }
                 else if(subquery.charAt(startIndex) == '-') //NOT QUERY
                 {
+                    //check if '-' is for phrase literal
+                    //subquery = -"explore" the park
+                    if (subquery.charAt(startIndex+1)=='"'){
+                        String subStr = subquery.substring(startIndex+1);
+                        int posOfQuote = subStr.indexOf('"', 1);
+                        return new Literal(
+                            new StringBounds(startIndex, posOfQuote+2),
+                            new NotQuery(subquery.substring(startIndex, startIndex + posOfQuote+1)));
+                    }
+                    else{
                     int nextSpace = subquery.indexOf(' ', startIndex);
+                    
                     if (nextSpace < 0) {
                         // No more literals in this subquery.
                         lengthOut = subLength - startIndex;
@@ -185,7 +194,8 @@ public class BooleanQueryParser {
                     // This is a term literal containing a single term.
                     return new Literal(
                             new StringBounds(startIndex, lengthOut),
-                            new TermLiteral(subquery.substring(startIndex, startIndex + lengthOut)));
+                            new NotQuery(subquery.substring(startIndex, startIndex + lengthOut)));
+                }
                 }
                 else
                 {

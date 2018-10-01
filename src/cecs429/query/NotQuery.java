@@ -8,6 +8,7 @@ package cecs429.query;
 import cecs429.index.Index;
 import cecs429.index.Posting;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,13 +18,28 @@ import java.util.stream.Collectors;
  */
 public class NotQuery implements QueryComponent {
 
-    private List<QueryComponent> mComponents;
+    //private List<QueryComponent> mComponents;
+    private List<QueryComponent> mTerms = new ArrayList<>();
+    private String component;
 
-    public NotQuery(List<QueryComponent> components) {
-        mComponents = components;
-
+        //-explore
+        //-"explore park"
         
-    }
+       
+	
+	public NotQuery(String terms) {
+                //terms = -explore the park
+		if(terms.charAt(1)=='"'){
+                    mTerms.add(new PhraseLiteral(terms.substring(2)));
+                    
+                }
+                else{
+                    mTerms.add(new TermLiteral(terms.substring(1)));
+                }
+                
+                
+                
+	}
 
     @Override
     public List<Posting> getPostings(Index index) {
@@ -37,13 +53,13 @@ public class NotQuery implements QueryComponent {
        // int count = mComponents.size() - 1;
 
         
-        p0=mComponents.get(0).getPostings(index);
+        p0=mTerms.get(0).getPostings(index);
         
         //p1=mComponents.get(1).getPostings(index);
         
         results = p0;
         
-        mComponents.clear();
+        
         // TODO: program the merge for an AndQuery, by gathering the postings of the composed QueryComponents and
         // intersecting the resulting postings.
         return results;
@@ -98,14 +114,17 @@ public class NotQuery implements QueryComponent {
         return result;
     }
 */
-    @Override
-    public String toString() {
-        return String.join(" ", mComponents.stream().map(c -> c.toString()).collect(Collectors.toList()));
-    }
+    
 
     private ArrayList<Object> toString(int count) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+@Override
+    public Boolean Component() {
+        return false;
+    }
+
+    
 
 }
 

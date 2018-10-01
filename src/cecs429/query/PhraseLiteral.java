@@ -31,6 +31,7 @@ public class PhraseLiteral implements QueryComponent {
 	 */
 	public PhraseLiteral(String terms) {
 		mTerms.addAll(Arrays.asList(terms.split(" ")));
+                System.out.println(mTerms);
                 
                 
 	}
@@ -175,4 +176,9 @@ public class PhraseLiteral implements QueryComponent {
 	public String toString() {
 		return "\"" + String.join(" ", mTerms) + "\"";
 	}
+
+    @Override
+    public Boolean Component() {
+        return true;
+    }
 }

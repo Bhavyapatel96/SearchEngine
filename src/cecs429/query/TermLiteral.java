@@ -48,4 +48,9 @@ public class TermLiteral implements QueryComponent {
 	public String toString() {
 		return mTerm;
 	}
+
+    @Override
+    public Boolean Component() {
+        return true;
+    }
 }

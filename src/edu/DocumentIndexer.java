@@ -84,14 +84,14 @@ public class DocumentIndexer {
                 clickList = true; 
                 
                 //clears list and repopulates it 
-               String docInfo;
+               int docInfo;
                
                GUI.JListModel.clear();
                GUI.ResultsLabel.setText("");
                
                for (Posting p : postings)
                {
-                   docInfo = corpus.getDocument(p.getDocumentId()).getTitle(); 
+                   docInfo = corpus.getDocument(p.getDocumentId()).getId(); 
                    GUI.JListModel.addElement(docInfo); 
 
                 } 
