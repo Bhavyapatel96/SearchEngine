@@ -62,7 +62,7 @@ public class JsonFileDocument implements FileDocument{
                 JsonFileDocument document = gson.fromJson(reader, JsonFileDocument.class);
                 this.mtitle = document.mtitle; 
                 this.mbody = ""; 
-                contents = document.mbody;   //contians the contents of the article
+                contents = this.mtitle + document.mbody;   //contians the contents of the article
                 document.setBody(""); //doesnt keep it in memory 
                 
             }
