@@ -5,7 +5,6 @@
  */
 package cecs429.text;
 
-
 import cecs429.text.Porter2Stemmer.SnowballProgram;
 import cecs429.text.Porter2Stemmer.SnowballStemmer;
 import java.util.ArrayList;
@@ -16,51 +15,42 @@ import java.util.List;
  * @author dayanarios
  */
 public class NewTokenProcessor implements TokenProcessor {
+
     @Override
-	public List<String> processToken(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-            
-            
-            String temp = token.replaceAll("^[^a-zA-Z0-9\\s]+|[^a-zA-Z0-9\\s]+$", ""); //removes nonalphanumeric chars from beginning and end
-            temp = temp.replaceAll("\'+", "").replaceAll("\"+", "");  //removes all apostropes and quotations
-            
-            String modifiedString = temp; //copy of string to split 
+    public List<String> processToken(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
-            List<String> terms = new ArrayList<String>();
-            
-            if(!modifiedString.equals(temp.replaceAll("\\-", ""))) //hypens exist in string
-                {
-                    modifiedString = modifiedString.replaceAll("\\-", " "); //replace all hypens with spaces
-                   
-                    String[] splitString = modifiedString.split("\\s+"); //split string around whitespace
-                    String concatenatedString = ""; 
+        String temp = token.replaceAll("^[^a-zA-Z0-9\\s]+|[^a-zA-Z0-9\\s]+$", ""); //removes nonalphanumeric chars from beginning and end
+        temp = temp.replaceAll("\'+", "").replaceAll("\"+", "");  //removes all apostropes and quotations
 
-                    for(int i = 0; i<splitString.length; i++)
-                    {
-                        terms.add(splitString[i].toLowerCase()); 
-                        concatenatedString+= splitString[i]; 
-                    }
+        String modifiedString = temp; //copy of string to split 
 
-                    terms.add(0, concatenatedString.toLowerCase());
-                }
-                else{
-                    terms.add(modifiedString.toLowerCase()); 
-                }
-                   
-            
-             for(int i = 0; i< terms.size(); i++)
-             {
-                 terms.set(i, PorterStemmer(terms.get(i))); //replaces the term at i with its stemmed version
-             }
-            
-            
+        List<String> terms = new ArrayList<String>();
 
-            
-            /**
-             * for testing purposes.
-             */
-            
-            
-            /*
+        if (!modifiedString.equals(temp.replaceAll("\\-", ""))) //hypens exist in string
+        {
+            modifiedString = modifiedString.replaceAll("\\-", " "); //replace all hypens with spaces
+
+            String[] splitString = modifiedString.split("\\s+"); //split string around whitespace
+            String concatenatedString = "";
+
+            for (int i = 0; i < splitString.length; i++) {
+                terms.add(splitString[i].toLowerCase());
+                concatenatedString += splitString[i];
+            }
+
+            terms.add(0, concatenatedString.toLowerCase());
+        } else {
+            terms.add(modifiedString.toLowerCase());
+        }
+
+        for (int i = 0; i < terms.size(); i++) {
+            terms.set(i, PorterStemmer(terms.get(i))); //replaces the term at i with its stemmed version
+        }
+
+        /**
+         * for testing purposes.
+         */
+        /*
             List<String> test = new ArrayList<String>();
             test.add("-#$%Hello8()-"); 
             test.add("'$this--is\"\"a.test\"");
@@ -116,24 +106,20 @@ public class NewTokenProcessor implements TokenProcessor {
                System.out.println("porter stemmer result: " + PorterStemmer(terms.get(i))); 
            }
          
-            */
-            
-           /** 
-            * End testing.
-            */ 
-           
-            
-            return terms; 
-        }
-        
-        public String PorterStemmer(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException
-        {
-            Class stemClass = Class.forName("cecs429.text.Porter2Stemmer.englishStemmer"); 
-            SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();
-            stemmer.setCurrent(token);
-            stemmer.stem();
-            
-            return stemmer.getCurrent(); 
-        }
-    
+         */
+        /**
+         * End testing.
+         */
+        return terms;
+    }
+
+    public String PorterStemmer(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        Class stemClass = Class.forName("cecs429.text.Porter2Stemmer.englishStemmer");
+        SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();
+        stemmer.setCurrent(token);
+        stemmer.stem();
+
+        return stemmer.getCurrent();
+    }
+
 }

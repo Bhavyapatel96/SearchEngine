@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 /**
  * An OrQuery composes other QueryComponents and merges their postings with a
  * union-type operation.
+ *
  * @author bhavya
  */
 public class OrQuery implements QueryComponent {
@@ -24,11 +25,10 @@ public class OrQuery implements QueryComponent {
     @Override
     public List<Posting> getPostings(Index index) {
         List<Posting> results = new ArrayList<>();
-        //List<Positional_posting> result = new ArrayList<>();
         List<Posting> p0 = new ArrayList<>();
         List<Posting> p1 = new ArrayList<>();
 
-        //how many times we want to perform merge.
+        //number of times we want to perform merge.
         int count = mComponents.size() - 1;
 
         p0 = mComponents.get(0).getPostings(index);
@@ -40,16 +40,14 @@ public class OrQuery implements QueryComponent {
 
         while (count > 0) {
 
-            //mComponents.get(k).getPositional_posting(index);
             List<Posting> p2 = new ArrayList<>();
 
             p2 = mComponents.get(k).getPostings(index);
 
             results = merge(results, p2);
-            count = count - 1;
-            k = k + 1;
+            count--;
+            k++;
 
-            //System.out.println(results);
         }
         mComponents.clear();
         // TODO: program the merge for an AndQuery, by gathering the postings of the composed QueryComponents and
@@ -59,19 +57,9 @@ public class OrQuery implements QueryComponent {
 
     public List<Posting> merge(List<Posting> a, List<Posting> b) {
         List<Posting> result = new ArrayList<>();
-        List<Integer> p0 = new ArrayList<>();
-        List<Integer> p1 = new ArrayList<>();
-        for (Posting a1 : a) {
 
-            p0.add(a1.getDocumentId());
-        }
-        for (Posting b1 : b) {
-
-            p1.add(b1.getDocumentId());
-        }
-
-        int m = p0.size();
-        int n = p1.size();
+        int m = a.size();
+        int n = b.size();
         int i = 0;
         int j = 0;
         while (i < m || j < n) {
@@ -86,7 +74,7 @@ public class OrQuery implements QueryComponent {
                     i++;
                 }
             } else {
-                if (p0.get(i) == p1.get(j)) {
+                if (a.get(i).getDocumentId() == b.get(j).getDocumentId()) {
                     result.add(b.get(j));
                     i++;
                     j++;
@@ -101,7 +89,7 @@ public class OrQuery implements QueryComponent {
                             i++;
                         }
                     }
-                } else if (p0.get(i) < p1.get(j)) {
+                } else if (a.get(i).getDocumentId() < b.get(j).getDocumentId()) {
                     result.add(a.get(i));
                     i++;
                     if (i == m) {
