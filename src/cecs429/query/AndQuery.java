@@ -2,11 +2,8 @@ package cecs429.query;
 
 import cecs429.index.Index;
 import cecs429.index.Posting;
-import java.util.List;
 import java.util.stream.Collectors;
-import cecs429.index.Positional_inverted_index;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import java.util.List;
 
@@ -14,7 +11,7 @@ import java.util.List;
  * An AndQuery composes other QueryComponents and merges their postings in an
  * intersection-like operation.
  *
- * @author: bhavy
+ * @author: bhavya
  */
 public class AndQuery implements QueryComponent {
 
@@ -29,7 +26,6 @@ public class AndQuery implements QueryComponent {
 
         List<Posting> results = new ArrayList<>();
         List<QueryComponent> notcomponent = new ArrayList<>();
-        List<String> phrase = new ArrayList<>();
         List<Posting> p0 = new ArrayList<>();
         List<Posting> p1 = new ArrayList<>();
         //number of times we want to perform merge operation.

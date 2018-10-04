@@ -159,5 +159,11 @@ public class DirectoryCorpus implements DocumentCorpus {
 		return corpus;
 	}
         
+        //for textfiles
+        public static DirectoryCorpus loadTextDirectory(Path absolutePath, String fileExtension) {
+		DirectoryCorpus corpus = new DirectoryCorpus(absolutePath);
+		corpus.registerFileDocumentFactory(fileExtension, TextFileDocument :: loadTextFileDocument);
+		return corpus;
+	}
         
 }

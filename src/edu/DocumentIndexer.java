@@ -77,13 +77,13 @@ public class DocumentIndexer {
                 clickList = true;
 
                 //clears list and repopulates it 
-                int docInfo;
+                String docInfo;
 
                 GUI.JListModel.clear();
                 GUI.ResultsLabel.setText("");
 
                 for (Posting p : postings) {
-                    docInfo = corpus.getDocument(p.getDocumentId()).getId();
+                    docInfo = corpus.getDocument(p.getDocumentId()).getTitle();
                     GUI.JListModel.addElement(docInfo);
 
                 }
@@ -121,6 +121,7 @@ public class DocumentIndexer {
 
                 for (String w : word) {
                     index.addTerm(w, i, d.getId());
+
                 }
 
                 i = i + 1;
@@ -163,7 +164,6 @@ public class DocumentIndexer {
 
         } else if (subqueries[0].equals("vocab")) {
             List<String> vocabList = index.getVocabulary();
-            // System.out.println("vocab list printed: " + vocabList);
             GUI.JListModel.clear();
             GUI.ResultsLabel.setText("");
 
@@ -194,91 +194,4 @@ public class DocumentIndexer {
         }
         return false;
     }
-
-    /**
-     * Use this to run the program without the GUI. Comment out all of main in
-     * GUI.java fix imports Use main below
-     *
-     */
-    /*
-       public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-
-        DocumentCorpus corpus = DirectoryCorpus.loadJsonTextDirectory(Paths.get("/Users/dayanarios/Desktop/10jsonfiles").toAbsolutePath(), ".json"); //to run json files
-        //DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");// To run .txt files
-        Positional_inverted_index index = posindexCorpus(corpus);
-        List<Posting> result = new ArrayList<>();
-        List<QueryComponent> l = new ArrayList<>();
-        
-        boolean cont = true;
-
-        Scanner scan = new Scanner(System.in);
-        String query;
-
-        while (cont) {
-            System.out.println("\nEnter a term to search (single word only): ");
-            query = scan.nextLine();
-            query = query.toLowerCase();
-
-            if (query.equals("quit")) {
-                cont = false;
-                break;
-            }
-             BooleanQueryParser b = new BooleanQueryParser();
-             QueryComponent c = b.parseQuery(query);
-             result=c.getPostings(index);
-             if(result.isEmpty()){
-                 System.out.println("No results");
-             }
-             else{
-                 for (Posting p : result)
-                 {
-                 
-                     System.out.println("results: " + p.getDocumentId());
-                 }
-             }
-                
-           
-    }
-
-  
-
-        List<String> terms = new ArrayList(); 
-        terms.add("national");
-        terms.add("historical");
-        terms.add("park");
-        terms.add("hike");
-        
-        List<Posting> p1 = new ArrayList(); 
-        Posting post1 = new Posting(11, 1); 
-        p1.add(post1);
-        
-            
-            
-            
-            List<Posting> p2 = new ArrayList(); 
-            Posting post2 = new Posting(11, 1); 
-        p2.add(post2);
-           
-            List<Integer> positions1 = post1.getPositions(); 
-            
-            positions1.add(4);
-            positions1.add(6); 
-            positions1.add(7); 
-            positions1.add(13); 
-            
-            List<Integer> positions2 = post2.getPositions();
-            positions2.add(3); 
-            positions2.add(6);
-            positions2.add(9);
-            positions2.add(11);
-            positions2.add(12); 
-            
-        PhraseLiteral pliteral = new PhraseLiteral(terms); 
-        //pliteral.getPostings(index);
-        //System.out.println("p1 posting: " + p1.get(0).getDocumentId() + " positions: " + positions1);
-        //System.out.println("p2 posting: " + p2.get(0).getDocumentId() + " positions: " + positions2); 
-        System.out.println(pliteral.isPhraseLiteral(p1, p2, p1.size(), p2.size()));
-        
-    }
-     */
 }

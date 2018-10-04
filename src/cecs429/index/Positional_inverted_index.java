@@ -6,10 +6,12 @@
 package cecs429.index;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -98,25 +100,15 @@ public class Positional_inverted_index implements Index{
             return vocab; 
 	}
 
-  
-
-   public void print()
-    {
-
-        for (String key : mInvertedIndex.keySet()) 
-        {
-            System.out.print("term in vocab: " + key);
-
-            
-            System.out.println(); 
-
-
+        public void print(){
+        
+        System.out.println(mInvertedIndex.keySet());
         }
 
-    }
+    
 
-        
+}   
         
     
     
-}
+

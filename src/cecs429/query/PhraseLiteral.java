@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Represents a phrase literal consisting of one or more terms that must occur
  * in sequence.
  *
- * @author: dayana
+ * @author: dayana, bhavya
  */
 public class PhraseLiteral implements QueryComponent {
     // The list of individual terms in the phrase.
@@ -35,7 +35,7 @@ public class PhraseLiteral implements QueryComponent {
      */
     public PhraseLiteral(String terms) {
         mTerms.addAll(Arrays.asList(terms.split(" ")));
-        
+
     }
 
     @Override
@@ -47,9 +47,8 @@ public class PhraseLiteral implements QueryComponent {
         try {
             for (String term : mTerms) {
                 temp = new ArrayList(processor.processToken(term));
-                for (String t : temp) {
-                    queries.add(t);
-                }
+                queries.add(temp.get(0));
+
             }
 
         } catch (ClassNotFoundException ex) {
@@ -99,10 +98,10 @@ public class PhraseLiteral implements QueryComponent {
 
     }
 
+    //modified by bhavya
     public List<Posting> merge(List<Posting> postings1, List<Posting> postings2, int postings1_length, int postings2_length) {
         List<Posting> results = new ArrayList();
         List<Integer> positions1 = new ArrayList();
-
         List<Integer> positions2 = new ArrayList();
 
         int index1 = 0;
@@ -119,19 +118,47 @@ public class PhraseLiteral implements QueryComponent {
             if (postings1.get(index1).getDocumentId() == postings2.get(index2).getDocumentId()) {
                 while (pos1 < positions1.size() && pos2 < positions2.size()) {
                     if (positions1.get(pos1) + 1 == positions2.get(pos2)) {
-                        results.add(postings2.get(index2));
-                        break;
+                        //Initial stage, when the result list is empty, simply add the posting with current position instead of all the positions.
+                        if (results.isEmpty()) {
+                            Posting p = new Posting(postings2.get(index2).getDocumentId(), positions2.get(pos2));
+                            results.add(p);
+                        } //if results is not empty, and it contains documentID already, simply add the position.
+                        else if (results.get(results.size() - 1).getDocumentId() == postings2.get(index2).getDocumentId()) {
+                            Posting p = results.get(results.size() - 1);
+                            p.addPosition(positions2.get(pos2));
+                        } //if doc id is not present, add it.
+                        else {
+                            Posting p = new Posting(postings2.get(index2).getDocumentId(), positions2.get(pos2));
+                            results.add(p);
+                        }
+                        pos1++;
+                        pos2++;
+                        if (pos1 == positions1.size() || pos2 == positions2.size()) {
+                            break;
+                        }
                     } else if (positions1.get(pos1) < positions2.get(pos2)) {
                         pos1++;
+                        if (pos1 == positions1.size()) {
+                            //If we reach end of one posting list, no need to search the other list.
+                            break;
+                        }
                     } else if (positions2.get(pos2) < positions1.get(pos1)) {
                         pos2++;
+                        if (pos2 == positions2.size()) {
+                            //If we reach end of one posting list, no need to search the other list.
+                            break;
+                        }
                     } else {
                         pos1++;
                         pos2++;
+                        if (pos1 == positions1.size() || pos2 == positions2.size()) {
+                            //If we reach end of any posting list, no need to search the other list.
+                            break;
+                        }
                     }
 
                 }
-
+                //increment docID
                 index1++;
                 index2++;
 

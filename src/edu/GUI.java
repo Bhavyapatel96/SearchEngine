@@ -28,25 +28,24 @@ import javax.swing.JOptionPane;
  * @author dayanarios
  */
 public class GUI extends javax.swing.JFrame {
-    private static Path directoryPath; 
+
+    private static Path directoryPath;
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    private int xCoord = dim.width/2; 
-    private int yCoord = dim.height/2;
+    private int xCoord = dim.width / 2;
+    private int yCoord = dim.height / 2;
     String indexingMsg = "Indexing Corpus";
     protected static DefaultListModel JListModel = new DefaultListModel();
-    private String iconPath = getClass().getResource("/resources/pose.png").toString(); 
-    private static ImageIcon icon = new ImageIcon( new ImageIcon(GUI.class.getResource("/resources/PoSE.png")).getImage().getScaledInstance(170, 58, Image.SCALE_DEFAULT));
-    
+    private String iconPath = getClass().getResource("/resources/pose.png").toString();
+    private static ImageIcon icon = new ImageIcon(new ImageIcon(GUI.class.getResource("/resources/PoSE.png")).getImage().getScaledInstance(170, 58, Image.SCALE_DEFAULT));
 
     /**
      * Creates new form GUI
      */
-    public GUI()
-    {
-        
+    public GUI() {
+
         initComponents();
-        this.setLocation(xCoord-this.getSize().width/2,yCoord-this.getSize().height/2);
-        
+        this.setLocation(xCoord - this.getSize().width / 2, yCoord - this.getSize().height / 2);
+
     }
 
     /**
@@ -404,47 +403,41 @@ public class GUI extends javax.swing.JFrame {
 
     private void SearchDirectoriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchDirectoriesButtonActionPerformed
         // TODO add your handling code here:
-        directoryChooser = new JFileChooser(); 
+        directoryChooser = new JFileChooser();
         directoryChooser.setCurrentDirectory(new java.io.File("~")); //starts at root directory
         directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         directoryChooser.setAcceptAllFileFilterUsed(false);
-        
-        if (directoryChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
-        { 
-           DirectoryDialogBox.dispose();
-           JOptionPane.showOptionDialog(indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null ,null);
-           this.setVisible(true);
-           File file = directoryChooser.getSelectedFile(); 
-           directoryPath = file.toPath(); 
-           
-           //starts indexing 
-           
+
+        if (directoryChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            DirectoryDialogBox.dispose();
+            JOptionPane.showOptionDialog(indexingCorpusMessage, "Indexing corpus please wait", "Indexing Corpus", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, null, null);
+            this.setVisible(true);
+            File file = directoryChooser.getSelectedFile();
+            directoryPath = file.toPath();
+
+            //starts indexing 
             try {
-                
+
                 DocumentIndexer.startIndexing(directoryPath);
-                
+
             } catch (Exception ex) {
-                System.out.println("Problem with DocumentIndexer.startIndexing(directoryPath)"); 
+                System.out.println("Problem with DocumentIndexer.startIndexing(directoryPath)");
             }
 
+        } else {
+            System.out.println("No Selection ");
         }
-        else 
-        {
-          System.out.println("No Selection ");
-        }
-        
-        
-        
+
+
     }//GEN-LAST:event_SearchDirectoriesButtonActionPerformed
 
     private void SearchBarTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBarTextFieldActionPerformed
-        
-            // TODO add your handling code here:
-            DocumentIndexer.query = SearchBarTextField.getText();
-        try {   
-            if(!DocumentIndexer.newCorpus())
-            {
-                
+
+        // TODO add your handling code here:
+        DocumentIndexer.query = SearchBarTextField.getText();
+        try {
+            if (!DocumentIndexer.newCorpus()) {
+
                 DocumentIndexer.startSearchEngine();
             }
         } catch (ClassNotFoundException ex) {
@@ -454,26 +447,24 @@ public class GUI extends javax.swing.JFrame {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_SearchBarTextFieldActionPerformed
 
     private void ResultsJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ResultsJListMouseClicked
-        
-        if(DocumentIndexer.clickList)
-        {
+
+        if (DocumentIndexer.clickList) {
             // TODO add your handling code here:
             javax.swing.JList list = (javax.swing.JList) evt.getSource();
             if (evt.getClickCount() == 2) {
                 int index = list.locationToIndex(evt.getPoint());
-                
+
                 docFrame.setVisible(true);
 
                 try {
 
-                    
                     BufferedReader reader = new BufferedReader(DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getContent());
-                    
-                    String title = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle(); 
+
+                    String title = DocumentIndexer.corpus.getDocument(DocumentIndexer.postings.get(index).getDocumentId()).getTitle();
                     //read the contents of the json file to display them
                     String contents = "<html><h1>" + title + "</h1><body>";
                     String line;
@@ -488,36 +479,34 @@ public class GUI extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         }
-        
+
         SearchBarTextField.selectAll();
-        
+
     }//GEN-LAST:event_ResultsJListMouseClicked
 
-    
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String args[]) {
-       
-        try{
 
-        javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        try {
+
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
         }
-        catch (Exception ex){}
         //</editor-fold>
-    
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GUI().setVisible(false);
-                
+
             }
         });
-         
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
