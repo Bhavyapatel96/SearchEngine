@@ -18,10 +18,21 @@ public class OrQuery implements QueryComponent {
 
     private List<QueryComponent> mComponents;
 
+    /**
+     * initializes private variables
+     *
+     * @param components
+     */
     public OrQuery(List<QueryComponent> components) {
         mComponents = components;
     }
 
+    /**
+     * generates the merged postings
+     *
+     * @param index index to retrieve postings from
+     * @return merged list of postings for an OR operation
+     */
     @Override
     public List<Posting> getPostings(Index index) {
         List<Posting> results = new ArrayList<>();
@@ -55,6 +66,13 @@ public class OrQuery implements QueryComponent {
         return results;
     }
 
+    /**
+     * generates the merged postings using a union like operation
+     *
+     * @param a list 1 to merge
+     * @param b list 2 to merge
+     * @return
+     */
     public List<Posting> merge(List<Posting> a, List<Posting> b) {
         List<Posting> result = new ArrayList<>();
 

@@ -17,10 +17,22 @@ public class AndQuery implements QueryComponent {
 
     private List<QueryComponent> mComponents;
 
+    /**
+     * Constructor for AndQuery initializes private variables
+     *
+     * @param components
+     */
     public AndQuery(List<QueryComponent> components) {
         mComponents = components;
     }
 
+    /**
+     * Returns the posting list of an AND merge by returning the intersection of
+     * postings.
+     *
+     * @param index index to retrieve postings from
+     * @return list of postings after the AND merge
+     */
     @Override
     public List<Posting> getPostings(Index index) {
 
@@ -62,11 +74,18 @@ public class AndQuery implements QueryComponent {
         }
 
         mComponents.clear();
-        // TODO: program the merge for an AndQuery, by gathering the postings of the composed QueryComponents and
-        // intersecting the resulting postings.
+
         return results;
     }
 
+    /**
+     * Merges two postings list based on their intersection Only merges when
+     * docIds match Only merges positive literals
+     *
+     * @param a list 1 to merge
+     * @param b list 2 to merge
+     * @return merged list of postings from list 1 and 2
+     */
     public List<Posting> merge(List<Posting> a, List<Posting> b) {
         List<Posting> result = new ArrayList<>();
 
@@ -93,6 +112,14 @@ public class AndQuery implements QueryComponent {
         return result;
     }
 
+    /**
+     * Similar to the merge function above instead merges a negative and
+     * positive literal
+     *
+     * @param a list 1 to merge
+     * @param b list 2 to merge
+     * @return
+     */
     public List<Posting> ANDNOTmerge(List<Posting> a, List<Posting> b) {
         List<Posting> result = new ArrayList<>();
 
@@ -140,6 +167,11 @@ public class AndQuery implements QueryComponent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Used to determine whether component is a positive or negative literal
+     *
+     * @return true for positive
+     */
     @Override
     public Boolean Component() {
         return true;

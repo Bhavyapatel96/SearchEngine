@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Contains literals that will be used in a not query.
  *
  * @author bhavya
  */
@@ -33,6 +34,12 @@ public class NotQuery implements QueryComponent {
 
     }
 
+    /**
+     * Gathers the postings for the query
+     *
+     * @param index supplied by program
+     * @return list of postings that contain the literal
+     */
     @Override
     public List<Posting> getPostings(Index index) {
         List<Posting> results = new ArrayList<>();
@@ -49,6 +56,11 @@ public class NotQuery implements QueryComponent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Used to determine whether component is a positive or negative literal
+     *
+     * @return false for negative
+     */
     @Override
     public Boolean Component() {
         return false;

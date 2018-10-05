@@ -25,6 +25,12 @@ public class TermLiteral implements QueryComponent {
         return mTerm;
     }
 
+    /**
+     * generates a list of postings that have the given term
+     *
+     * @param index index to retrieve postings from
+     * @return list of postings that contains the term
+     */
     @Override
     public List<Posting> getPostings(Index index) {
         TokenProcessor processor = new NewTokenProcessor();
@@ -49,6 +55,11 @@ public class TermLiteral implements QueryComponent {
         return mTerm;
     }
 
+    /**
+     * Used to determine whether component is a positive or negative literal
+     *
+     * @return true for positive
+     */
     @Override
     public Boolean Component() {
         return true;

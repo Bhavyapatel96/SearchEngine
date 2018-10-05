@@ -21,19 +21,17 @@ public class Posting {
 
     private int mDocumentId;
     private List<Integer> h; //h = positions
-    
+
     public Posting(int docID, int pos) {
 
-       mDocumentId = docID;
-        h  = new ArrayList<>();
+        mDocumentId = docID;
+        h = new ArrayList<>();
         h.add(pos);
-        
 
     }
 
-    public List<Integer> getPositions(){
-    //System.out.print(mDocumentId);
-    return h;
+    public List<Integer> getPositions() {
+        return h;
     }
 
     public int getDocumentId() {
@@ -41,13 +39,9 @@ public class Posting {
         return mDocumentId;
     }
 
-    
-    
-    
-    public void addPosition(int position){
-        
-     h.add(position);
-    
-    
+    public void addPosition(int position) {
+
+        h.add(position);
+
     }
 }

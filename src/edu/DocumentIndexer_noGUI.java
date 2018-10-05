@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Used to run the search engine through the output window, no GUI Follows the
+ * documentation in DocumentIndexder.java.
  *
  * @author bhavy
  */
@@ -39,7 +41,7 @@ public class DocumentIndexer_noGUI {
         index.print();
         List<Posting> result = new ArrayList<>();
         List<QueryComponent> l = new ArrayList<>();
-        
+
         boolean cont = true;
 
         Scanner scan = new Scanner(System.in);
@@ -54,24 +56,23 @@ public class DocumentIndexer_noGUI {
                 cont = false;
                 break;
             }
-             BooleanQueryParser b = new BooleanQueryParser();
-             QueryComponent c = b.parseQuery(query);
-             result=c.getPostings(index);
-             System.out.println(result);
-             if(result.isEmpty()){
-                 System.out.println("No results");
-             }
-             else{
-             for (Posting p : result){
-              //   System.out.println(result);
-                 System.out.println("Doctument: " + p.getDocumentId() +"\t Positions:  "+p.getPositions());;
-             }
-             }
-                
-           
-}
-    
+            BooleanQueryParser b = new BooleanQueryParser();
+            QueryComponent c = b.parseQuery(query);
+            result = c.getPostings(index);
+            System.out.println(result);
+            if (result.isEmpty()) {
+                System.out.println("No results");
+            } else {
+                for (Posting p : result) {
+                    //   System.out.println(result);
+                    System.out.println("Doctument: " + p.getDocumentId() + "\t Positions:  " + p.getPositions());;
+                }
+            }
+
+        }
+
     }
+
     private static Positional_inverted_index posindexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
         NewTokenProcessor processor = new NewTokenProcessor();

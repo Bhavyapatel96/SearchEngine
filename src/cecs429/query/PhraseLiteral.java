@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 
 /**
  * Represents a phrase literal consisting of one or more terms that must occur
- * in sequence.
+ * in sequence. Checks positions of term in document to ensure it is a phrase
+ * literal
  *
  * @author: dayana, bhavya
  */
@@ -38,6 +39,12 @@ public class PhraseLiteral implements QueryComponent {
 
     }
 
+    /**
+     * Constructs a list of postings that contains the phrase literal
+     *
+     * @param index index to retrieve postings form
+     * @return merged list of postings that contain the given phrase literal
+     */
     @Override
     public List<Posting> getPostings(Index index) {
         TokenProcessor processor = new NewTokenProcessor();
@@ -98,7 +105,18 @@ public class PhraseLiteral implements QueryComponent {
 
     }
 
-    //modified by bhavya
+    /**
+     * merges two list on the condition that the position of the given term is
+     * off by one in the positions for posting2
+     *
+     * @param postings1 list 1 of postings to be merged
+     * @param postings2 list 2 of postings to be merged
+     * @param postings1_length length of postings1
+     * @param postings2_length length of postings2
+     * @return
+     *
+     * modified by bhavya
+     */
     public List<Posting> merge(List<Posting> postings1, List<Posting> postings2, int postings1_length, int postings2_length) {
         List<Posting> results = new ArrayList();
         List<Integer> positions1 = new ArrayList();
@@ -178,6 +196,11 @@ public class PhraseLiteral implements QueryComponent {
         return "\"" + String.join(" ", mTerms) + "\"";
     }
 
+    /**
+     * Used to determine whether component is a positive or negative literal
+     *
+     * @return true for positive
+     */
     @Override
     public Boolean Component() {
         return true;

@@ -11,11 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Advanced token processor.
  *
  * @author dayanarios
  */
 public class NewTokenProcessor implements TokenProcessor {
 
+    /**
+     * Removes all nonalphanumeric characters from the beginning and end of
+     * token Removes all \' and \" found anywhere in the token Removes all
+     * hypens and splits token based on hypens Lowercases the token Stems the
+     * token
+     *
+     * @param token token found in current doc being indexed
+     * @return a normalized token to store in the vocab of the index
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     @Override
     public List<String> processToken(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
@@ -47,72 +60,18 @@ public class NewTokenProcessor implements TokenProcessor {
             terms.set(i, PorterStemmer(terms.get(i))); //replaces the term at i with its stemmed version
         }
 
-        /**
-         * for testing purposes.
-         */
-        /*
-            List<String> test = new ArrayList<String>();
-            test.add("-#$%Hello8()-"); 
-            test.add("'$this--is\"\"a.test\"");
-            test.add("^hypenation-test-past,"); 
-            test.add("%192.168.1.1");
-            test.add("*!@#$%^&*()consolidating!))(*!^*!"); //stemmer should give consolid
-            test.add(":\"{}\\+knocking"); //stemmer should give knock
-            
-            List<String> terms = new ArrayList<String>(); 
-            
-            for(int j = 0; j< test.size(); j++)
-            {
-                String temp = test.get(j).replaceAll("^[^a-zA-Z0-9\\s]+|[^a-zA-Z0-9\\s]+$", "");//token.replaceAll("^[^a-zA-Z0-9\\s]+|[^a-zA-Z0-9\\s]+$", ""); //removes nonalphanumeric chars from beginning and end
-                
-                temp = temp.replaceAll("\'", "").replaceAll("\"", "");  //removes all apostropes and quotations
-
-                //System.out.println("modified string: " + temp); 
-                
-                
-                String modifiedString = temp; //copy of string to split 
-                
-                if(!modifiedString.equals(temp.replaceAll("\\-", ""))) //hypens exist in string
-                {
-                    modifiedString = modifiedString.replaceAll("\\-", " ");
-                    //terms.add(modifiedString); //adds original term without any hypens
-                    
-                    
-
-                    String[] splitString = modifiedString.split("\\s+"); 
-                    String concatenatedString = ""; 
-
-                    for(int i = 0; i<splitString.length; i++)
-                    {
-                        terms.add(splitString[i].toLowerCase()); 
-                        //System.out.println("split string at " + i + " " + splitString[i]); 
-                        concatenatedString+= splitString[i]; 
-                    }
-
-                    terms.add(concatenatedString.toLowerCase());
-                }
-                else{
-                    terms.add(modifiedString.toLowerCase().toLowerCase()); 
-                }
-                
-            }
-            
-            
-            System.out.println("\n");
-           
-           for(int i = 0; i<terms.size(); i++)
-           {
-               System.out.println("result after rules 1-4: " + terms.get(i));
-               System.out.println("porter stemmer result: " + PorterStemmer(terms.get(i))); 
-           }
-         
-         */
-        /**
-         * End testing.
-         */
         return terms;
     }
 
+    /**
+     * Stems a token according to Porter Stemmer
+     *
+     * @param token normalized token supplied by the processToken method above
+     * @return
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public String PorterStemmer(String token) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Class stemClass = Class.forName("cecs429.text.Porter2Stemmer.englishStemmer");
         SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();

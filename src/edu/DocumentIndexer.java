@@ -26,6 +26,7 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
+ * Main driver class used in the GUI to run the search engine
  *
  * @author dayanarios
  */
@@ -38,6 +39,8 @@ public class DocumentIndexer {
     protected static Boolean clickList = false;  //prevents clicking the list when there is nothing to click
 
     /**
+     * Indexes the corpus given by the path parameter, records the time it takes
+     * to index.
      *
      * @param path supplied by user in
      * GUI.SearchDirectoriesButtonActionPerformed
@@ -56,6 +59,15 @@ public class DocumentIndexer {
 
     }
 
+    /**
+     * Main method that is called when inputing a search query Check for the
+     * existence of special queries Ensures the list is clear after every new
+     * search query Displays any relevant result in the GUI's result label.
+     *
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
         if (!specialQueries(query)) {
@@ -97,6 +109,16 @@ public class DocumentIndexer {
 
     }
 
+    /**
+     * Creates a positional inverted index Tokenizes all the terms found in each
+     * document in the corpus
+     *
+     * @param corpus corpus to be indexed
+     * @return a positional inverted index over the corpus
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     private static Positional_inverted_index posindexCorpus(DocumentCorpus corpus) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
         TokenProcessor processor = new NewTokenProcessor();
@@ -133,6 +155,17 @@ public class DocumentIndexer {
         return index;
     }
 
+    /**
+     * Checks for the existence of special queries Checks if the user quit the
+     * program Checks if the user wants to stem a word Checks if the user wants
+     * to return the first 1000 terms in the vocab
+     *
+     * @param query inputted by the user
+     * @return true if a special query was performed false otherwise
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     private static Boolean specialQueries(String query) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         clickList = false;
         //newCorpus = true;
@@ -181,6 +214,14 @@ public class DocumentIndexer {
         return false;
     }
 
+    /**
+     * Checks if the user wants to index a new corpus
+     *
+     * @return true if the user wants to index a new corpus false otherwise
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     protected static Boolean newCorpus() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         String[] subqueries = query.split("\\s+"); //split around white space
         if (subqueries[0].equals("index") && subqueries.length > 1) {
