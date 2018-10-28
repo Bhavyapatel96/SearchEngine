@@ -294,6 +294,8 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.ButtonGroup" name="modeButtonGroup">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -322,12 +324,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="FrameFootnotes" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="topPanel" min="-2" max="-2" attributes="0"/>
-                      <Component id="bottomPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="FeaturesPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="topPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="bottomPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="FrameFootnotes" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
@@ -338,6 +339,8 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               <Component id="topPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="FeaturesPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="bottomPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -361,8 +364,8 @@
                   <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
                   <Component id="ProjectTitleLabel" min="-2" pref="170" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="SearchBarTextField" min="-2" pref="485" max="-2" attributes="0"/>
-                  <EmptySpace pref="86" max="32767" attributes="0"/>
+                  <Component id="SearchBarTextField" min="-2" pref="430" max="-2" attributes="0"/>
+                  <EmptySpace pref="155" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -452,7 +455,7 @@
                       <Component id="ResultsLabel" min="-2" pref="455" max="-2" attributes="0"/>
                       <Component id="ResultsScrollPane" min="-2" pref="669" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -587,7 +590,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Component id="footnoteLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="676" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -614,6 +617,66 @@
             <Property name="text" type="java.lang.String" value="Bhavya Patel, Dayana Rios"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="FeaturesPanel">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="f6" green="f6" red="f6" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
+                  <Component id="booleanButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="rankedButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="booleanButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rankedButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JRadioButton" name="booleanButton">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="modeButtonGroup"/>
+            </Property>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Boolean Mode"/>
+            <Property name="toolTipText" type="java.lang.String" value="Boolean Query Mode"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="booleanButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rankedButton">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="modeButtonGroup"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Ranked Mode"/>
+            <Property name="toolTipText" type="java.lang.String" value="Ranked Query Mode"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rankedButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

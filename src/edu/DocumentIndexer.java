@@ -17,12 +17,12 @@ import cecs429.text.EnglishTokenStream;
 import cecs429.text.NewTokenProcessor;
 import cecs429.text.TokenProcessor;
 import java.io.Reader;
+import static java.lang.Math.log;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,7 +37,12 @@ public class DocumentIndexer {
     protected static String query;
     protected static List<Posting> postings;
     protected static Boolean clickList = false;  //prevents clicking the list when there is nothing to click
-
+    protected static Boolean booleanMode = true; //indicates which mode the search engine should run in
+    protected static Boolean rankedMode = false; 
+    private int topK = 10; //search engine always returns the top K = 10 docs
+    private static int N = 0; //corpus size
+    
+    
     /**
      * Indexes the corpus given by the path parameter, records the time it takes
      * to index.
@@ -59,17 +64,30 @@ public class DocumentIndexer {
 
     }
 
+    
+    protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        if (booleanMode){
+            BooleanQueryMode(); 
+        }
+        else{
+            RankedQueryMode(); 
+        }
+            
+        
+    }
+
+    
     /**
-     * Main method that is called when inputing a search query Check for the
-     * existence of special queries Ensures the list is clear after every new
-     * search query Displays any relevant result in the GUI's result label.
+     * Runs the search engine in Boolean Query Mode.
+     * Checks for the existence of special queries.
+     * Ensures the list is cleared after every new search query.
+     * Displays any relevant result in the GUI's result label.
      *
      * @throws ClassNotFoundException
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    protected static void startSearchEngine() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-
+    private static void BooleanQueryMode() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
         if (!specialQueries(query)) {
             //newCorpus = false; 
             BooleanQueryParser bParser = new BooleanQueryParser();
@@ -108,7 +126,23 @@ public class DocumentIndexer {
         GUI.SearchBarTextField.selectAll();
 
     }
-
+    
+    /**
+     * Processes a query without any Boolean operators and returns the top 
+     * K=10 documents satisfying the query. 
+     */
+    private static void RankedQueryMode(){
+        /*
+        String[] query_array = query.split("\\s+");
+        int d_ft = 0; //TO CHANGE currently a place holder for d_ft
+        for (String term: query_array){
+            double w_qt = log(1 + (N/d_ft));
+        }
+           */ 
+    }
+    
+    
+    
     /**
      * Creates a positional inverted index Tokenizes all the terms found in each
      * document in the corpus
@@ -124,11 +158,13 @@ public class DocumentIndexer {
         TokenProcessor processor = new NewTokenProcessor();
 
         Iterable<Document> docs = corpus.getDocuments();
-
+        
         Positional_inverted_index index = new Positional_inverted_index();
 
         // Iterate through the documents, and:
         for (Document d : docs) {
+            N++; //increments the number of docs found in the corpus
+            
             // Tokenize the document's content by constructing an EnglishTokenStream around the document's content.
             Reader reader = d.getContent();
             EnglishTokenStream stream = new EnglishTokenStream(reader); //can access tokens through this stream

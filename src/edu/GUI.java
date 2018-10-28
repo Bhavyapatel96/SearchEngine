@@ -66,6 +66,7 @@ public class GUI extends javax.swing.JFrame {
         docBodyLabel = new javax.swing.JLabel();
         docFootNotesPanel = new javax.swing.JPanel();
         docFootNoteLabel = new javax.swing.JLabel();
+        modeButtonGroup = new javax.swing.ButtonGroup();
         topPanel = new javax.swing.JPanel();
         ProjectTitleLabel = new javax.swing.JLabel();
         SearchBarTextField = new javax.swing.JTextField();
@@ -79,6 +80,9 @@ public class GUI extends javax.swing.JFrame {
         ResultsLabel = new javax.swing.JLabel();
         FrameFootnotes = new javax.swing.JPanel();
         footnoteLabel = new javax.swing.JLabel();
+        FeaturesPanel = new javax.swing.JPanel();
+        booleanButton = new javax.swing.JRadioButton();
+        rankedButton = new javax.swing.JRadioButton();
 
         DirectoryDialogBox.setTitle("Select Directory");
         DirectoryDialogBox.setMinimumSize(new java.awt.Dimension(360, 208));
@@ -275,8 +279,8 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(86, 86, 86)
                 .addComponent(ProjectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addComponent(SearchBarTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(155, Short.MAX_VALUE))
         );
         topPanelLayout.setVerticalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,7 +338,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ResultsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(86, 86, 86))
+                .addGap(87, 87, 87))
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -361,7 +365,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(FrameFootnotesLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(footnoteLabel)
-                .addContainerGap(676, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         FrameFootnotesLayout.setVerticalGroup(
             FrameFootnotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,16 +375,58 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
+        FeaturesPanel.setBackground(new java.awt.Color(246, 246, 246));
+
+        modeButtonGroup.add(booleanButton);
+        booleanButton.setSelected(true);
+        booleanButton.setText("Boolean Mode");
+        booleanButton.setToolTipText("Boolean Query Mode");
+        booleanButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                booleanButtonActionPerformed(evt);
+            }
+        });
+
+        modeButtonGroup.add(rankedButton);
+        rankedButton.setText("Ranked Mode");
+        rankedButton.setToolTipText("Ranked Query Mode");
+        rankedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rankedButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout FeaturesPanelLayout = new javax.swing.GroupLayout(FeaturesPanel);
+        FeaturesPanel.setLayout(FeaturesPanelLayout);
+        FeaturesPanelLayout.setHorizontalGroup(
+            FeaturesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FeaturesPanelLayout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addComponent(booleanButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rankedButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        FeaturesPanelLayout.setVerticalGroup(
+            FeaturesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FeaturesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(FeaturesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(booleanButton)
+                    .addComponent(rankedButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(FrameFootnotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(FeaturesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(topPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(FrameFootnotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -388,6 +434,8 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(FeaturesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -499,6 +547,24 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ResultsJListMouseClicked
 
     /**
+     * Indicates the search engine is running in boolean query mode
+     * @param evt 
+     */
+    private void booleanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_booleanButtonActionPerformed
+        DocumentIndexer.booleanMode = true;
+        DocumentIndexer.rankedMode = false; 
+    }//GEN-LAST:event_booleanButtonActionPerformed
+
+    /**
+     * Indicates the search engine is running in ranked query mode
+     * @param evt 
+     */
+    private void rankedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankedButtonActionPerformed
+        DocumentIndexer.booleanMode = false;
+        DocumentIndexer.rankedMode = true; 
+    }//GEN-LAST:event_rankedButtonActionPerformed
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -524,6 +590,7 @@ public class GUI extends javax.swing.JFrame {
     private static javax.swing.JDialog DirectoryDialogBox;
     private javax.swing.JPanel DirectoryDialogPanel;
     private javax.swing.JLabel DirectoryDirectionsLabel;
+    private javax.swing.JPanel FeaturesPanel;
     private javax.swing.JPanel FrameFootnotes;
     private javax.swing.JLabel ProjectTitleLabel;
     protected static javax.swing.JList<String> ResultsJList;
@@ -533,6 +600,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane ResultsScrollPane1;
     protected static javax.swing.JTextField SearchBarTextField;
     private javax.swing.JButton SearchDirectoriesButton;
+    private javax.swing.JRadioButton booleanButton;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JFileChooser directoryChooser;
     private javax.swing.JLabel directoryPoseLabel;
@@ -544,6 +612,8 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JPanel docFramePanel;
     private javax.swing.JLabel footnoteLabel;
     protected static javax.swing.JOptionPane indexingCorpusMessage;
+    private javax.swing.ButtonGroup modeButtonGroup;
+    private javax.swing.JRadioButton rankedButton;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }
