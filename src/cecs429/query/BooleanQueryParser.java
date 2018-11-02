@@ -153,7 +153,7 @@ public class BooleanQueryParser {
             int posOfQuote = subStr.indexOf('"', 0);
             return new Literal(
                     new StringBounds(startIndex, posOfQuote + 2),
-                    new PhraseLiteral(subquery.substring(startIndex, startIndex + posOfQuote + 1)));
+                    new PhraseLiteral(subquery.substring(startIndex, startIndex + posOfQuote + 1), 1));
         } else if (subquery.charAt(startIndex) == '-') //NOT QUERY
         {
             //check if '-' is for phrase literal
@@ -164,7 +164,14 @@ public class BooleanQueryParser {
                 return new Literal(
                         new StringBounds(startIndex, posOfQuote + 2),
                         new NotQuery(subquery.substring(startIndex, startIndex + posOfQuote + 1)));
-            } else {
+            } else if (subquery.charAt(startIndex + 1) == '[') {
+                String subStr = subquery.substring(startIndex + 1);
+                int posOfQuote = subStr.indexOf(']', 1);
+                return new Literal(
+                        new StringBounds(startIndex, posOfQuote + 2),
+                        new NotQuery(subquery.substring(startIndex, startIndex + posOfQuote + 1)));
+            }
+            else{
                 int nextSpace = subquery.indexOf(' ', startIndex);
 
                 if (nextSpace < 0) {
@@ -179,7 +186,15 @@ public class BooleanQueryParser {
                         new StringBounds(startIndex, lengthOut),
                         new NotQuery(subquery.substring(startIndex, startIndex + lengthOut)));
             }
-        } else {
+        } else if (subquery.charAt(startIndex) == '[') { //NOT QUERY
+            String subStr = subquery.substring(startIndex + 1);
+            int posOfQuote = subStr.indexOf(']', 0);
+             return new Literal(
+                    new StringBounds(startIndex, posOfQuote + 2),
+                    new NearLiteral(subquery.substring(startIndex, startIndex + posOfQuote + 1)));
+        
+        }
+        else {
             // Locate the next space to find the end of this literal.
             int nextSpace = subquery.indexOf(' ', startIndex);
             if (nextSpace < 0) {

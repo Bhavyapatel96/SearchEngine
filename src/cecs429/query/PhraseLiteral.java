@@ -22,21 +22,23 @@ public class PhraseLiteral implements QueryComponent {
     // The list of individual terms in the phrase.
 
     private List<String> mTerms = new ArrayList<>();
+    private int k; 
 
     /**
      * Constructs a PhraseLiteral with the given individual phrase terms.
      */
-    public PhraseLiteral(List<String> terms) {
+    public PhraseLiteral(List<String> terms, int k) {
         mTerms.addAll(terms);
+        this.k = k; 
     }
 
     /**
      * Constructs a PhraseLiteral given a string with one or more individual
      * terms separated by spaces.
      */
-    public PhraseLiteral(String terms) {
+    public PhraseLiteral(String terms, int k) {
         mTerms.addAll(Arrays.asList(terms.split(" ")));
-
+        this.k = k; 
     }
 
     /**
@@ -90,11 +92,11 @@ public class PhraseLiteral implements QueryComponent {
             postings2 = index.getPositional_posting(queries.get(indexQueries));
 
             if (firstPass) {
-                results = merge(postings1, postings2, postings1.size(), postings2.size());
+                results = merge(postings1, postings2, postings1.size(), postings2.size(), k);
 
                 firstPass = false;
             } else {
-                results = merge(results, postings2, results.size(), postings2.size());
+                results = merge(results, postings2, results.size(), postings2.size(), k);
             }
 
             indexQueries++;
@@ -117,7 +119,7 @@ public class PhraseLiteral implements QueryComponent {
      *
      * modified by bhavya
      */
-    public List<Posting> merge(List<Posting> postings1, List<Posting> postings2, int postings1_length, int postings2_length) {
+    public List<Posting> merge(List<Posting> postings1, List<Posting> postings2, int postings1_length, int postings2_length, int k) {
         List<Posting> results = new ArrayList();
         List<Integer> positions1 = new ArrayList();
         List<Integer> positions2 = new ArrayList();
@@ -135,7 +137,7 @@ public class PhraseLiteral implements QueryComponent {
 
             if (postings1.get(index1).getDocumentId() == postings2.get(index2).getDocumentId()) {
                 while (pos1 < positions1.size() && pos2 < positions2.size()) {
-                    if (positions1.get(pos1) + 1 == positions2.get(pos2)) {
+                    if (positions1.get(pos1) + k == positions2.get(pos2)) {
                         //Initial stage, when the result list is empty, simply add the posting with current position instead of all the positions.
                         if (results.isEmpty()) {
                             Posting p = new Posting(postings2.get(index2).getDocumentId(), positions2.get(pos2));

@@ -26,9 +26,13 @@ public class NotQuery implements QueryComponent {
     public NotQuery(String terms) {
         //Checks if the NOT component is phrase literal or term.
         if (terms.charAt(1) == '"') {
-            mTerms.add(new PhraseLiteral(terms.substring(2)));
+            mTerms.add(new PhraseLiteral(terms.substring(2), 1));
 
-        } else {
+        } else if(terms.charAt(1) == '['){
+            //call near query to do the work 
+            mTerms.add(new NearLiteral(terms.substring(2))); 
+        }
+        else {
             mTerms.add(new TermLiteral(terms.substring(1)));
         }
 
